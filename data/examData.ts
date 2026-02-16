@@ -131,6 +131,18 @@ const OAK_BARTENDER_KEY = [
   { id: 'ob-10', questionText: 'What does ABV stand for?', correctAnswer: 'Alcohol by volume', points: 1 }
 ];
 
+const BEER_WINE_KNOWLEDGE_KEY = [
+  { id: 'bw-1', questionText: 'Describe (in detail) five different styles of beer', correctAnswer: 'IPA (India Pale Ale) - Hoppy beer with bold citrus and pine notes, moderate to high bitterness, typically 5-7% ABV. Pilsner - Crisp, light lager with clean malt backbone and floral hop character, golden color. Stout - Dark beer with roasted malt flavors of coffee and chocolate, creamy mouthfeel. Porter - Dark ale with rich, roasted malt profile, chocolate and caramel notes. Pale Ale - Balanced beer with moderate hop bitterness and malt sweetness, citrus/floral notes. Amber/Red Ale - Malty beer with toasted caramel notes, smooth finish. Wheat Beer/Hefeweizen - Light-bodied beer with hints of banana and clove, cloudy appearance. Blonde Ale - Light, easy-drinking ale with subtle malt sweetness. Mexican Lager - Crisp, refreshing lager with clean finish, subtle malt sweetness. Sour Ale - Tart, acidic beer with fruity flavors. (Any 5 styles with detailed descriptions)', points: 10 },
+  { id: 'bw-2', questionText: 'What gluten-free beers & ciders do we offer?', correctAnswer: 'Original Sin Black Widow (Cider), Dry Wrought Seasonal Cider (Cider - Florida Local, Gainesville), High Noon Pineapple (Hard Seltzer), Long Drink Traditional (Hard Seltzer), Strawberry Orange Mimosa Blonde Ale (Florida Local - technically beer but gluten-reduced)', points: 5 },
+  { id: 'bw-3', questionText: 'List four Florida beers we carry by the bottle/can', correctAnswer: 'First Magnitude Wakulla Hefeweizen (Gainesville, FL), Cypress & Grove Well & Good IPA (Gainesville, FL), Cypress & Grove Prairie Ride Pale Ale (Gainesville, FL), Walking Tree Babycakes Stout (Vero Beach, FL), Dry Wrought Seasonal Cider (Gainesville, FL), Strawberry Orange Mimosa Blonde Ale (Miami, FL). (Any 4 correct)', points: 4 },
+  { id: 'bw-4', questionText: 'What wine varietals do we serve on special for Happy Hour?', correctAnswer: 'Reds: Impero Cabernet Sauvignon, Impero Merlot. Whites: Albertoni Chardonnay, Albertoni Pinot Grigio', points: 4 },
+  { id: 'bw-5', questionText: 'How many ounces is a standard pour for wine served by the glass?', correctAnswer: '6 ounces', points: 1 },
+  { id: 'bw-6', questionText: 'List the red wines we serve by the glass (Brand & Varietal - There\'s 4)', correctAnswer: 'Don Genaro - Cabernet Sauvignon, Latitude 38 "Sonoma County" - Pinot Noir, Romulo - Malbec, Ferro 13 "The Nerd" - Nero d\'Avola', points: 8 },
+  { id: 'bw-7', questionText: 'List the white wines we serve by the glass (Brand & Varietal - There\'s 4)', correctAnswer: 'Villa Marin - Chardonnay, Villa Marin - Pinot Grigio, Ponga - Sauvignon Blanc, Echo Bay - Sauvignon Blanc', points: 8 },
+  { id: 'bw-8', questionText: 'What does ABV stand for?', correctAnswer: 'Alcohol By Volume', points: 1 },
+  { id: 'bw-9', questionText: 'List 5 of our CORE beers, year round on draft (Brand & Style)', correctAnswer: 'Orange Blossom Pilsner (OBP) - Pilsner (Florida Local - Tampa), Free Dive IPA - IPA (Florida Local - Coppertail, Tampa), Big Nose IPA - IPA (Gainesville Local - Swamp Head), Reel Slo Irish Red Ale - Red Ale (Florida Local - 81 Bay, Tampa), Black Butte Porter - Porter (Deschutes, Oregon), Ever Haze Hazy IPA - Hazy IPA (Florida Local - Tripping Animals, Doral), Honey Bee Citrus Blonde Ale - Citrus Blonde Ale (Gainesville Local - First Magnitude), Riot Juice Sour - Pastry Sour (Florida Local - Hidden Springs, Tampa), Tripping Animals Armored - Amber Ale (Florida Local - Doral), Easy Fridays - American Light Lager (Florida Local - Hidden Springs, Tampa), No Mames Mexican Lager - Mexican Lager (Florida Local - Tripping Animals, Doral). (Any 5 correct)', points: 10 }
+];
+
 const OAK_HOST_KEY = [
   { id: 'oh-1', questionText: 'When is our last seating for dinner on weekdays and weekends?', correctAnswer: '15 minutes before close on weekdays', points: 2 },
   { id: 'oh-2', questionText: 'What is our physical address?', correctAnswer: '15 SE 1st Ave, Gainesville, FL 32601', points: 2 },
@@ -232,6 +244,14 @@ export const AVAILABLE_EXAMS: ExamDefinition[] = [
     role: Role.SERVER,
     subType: 'Brunch Menu',
     answerKey: OAK_BRUNCH_KEY
+  },
+  {
+    id: 'beer-wine-knowledge',
+    title: 'Beer & Wine Knowledge - Supplemental Examination',
+    category: TestCategory.OAK,
+    role: Role.BARTENDER,
+    subType: 'Supplemental',
+    answerKey: BEER_WINE_KNOWLEDGE_KEY
   },
 
   // --- Cantina ---

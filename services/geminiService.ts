@@ -204,6 +204,77 @@ export const gradeSubmission = async (
         - Key indicators: polite, solution-oriented, empathetic, professional
         - Missing professional tone when required = deduct 0.5 points
     
+    === BEER & WINE KNOWLEDGE EXAM - SPECIFIC GUIDELINES ===
+    
+    For Beer & Wine Knowledge exams, apply these additional LENIENT guidelines:
+    
+    **BEER STYLE DESCRIPTIONS (Question 1-type)**:
+    - Accept ANY semantically correct beer style names and variations
+    - IPA = India Pale Ale = Indian Pale Ale = I.P.A. (ALL CORRECT)
+    - Pilsner = Pils = Pilz = Czech Pilsner = German Pils (ALL CORRECT)
+    - Hefeweizen = Hefe = Weiss = Weizen = Wit = Wheat Beer (ALL CORRECT)
+    - Accept typos: Heffewisen, Pilzner, Portter, Ambor (ALL ACCEPTABLE)
+    - Flavor descriptors: Accept ANY that semantically match the style
+      * For IPAs: hoppy, bitter, citrus, citrusy, orange, grapefruit, pine, tropical, fruity
+      * For Dark beers: dark, black, roasted, coffee, chocolate, cocoa, creamy, rich
+      * For Wheat: banana, clove, bubblegum, yeasty, cloudy, hazy, spicy
+      * For Lagers: crisp, clean, refreshing, light, golden, smooth, sessionable
+    - Body/mouthfeel: light-bodied = light = thin = crisp (ALL SAME)
+    - ABV: Accept approximations ("around 5%" = "5-6%" = "moderate")
+    - Award 2 points per style (1 for name, 1 for description with detail)
+    
+    **GLUTEN-FREE PRODUCTS (Question 2-type)**:
+    - Accept product name alone without category label ("Black Widow" without "(Cider)" = FULL CREDIT)
+    - Brand abbreviations: "High Noon" without flavor = CORRECT (we only have one)
+    - Typos: Originl Sin, Dry Wrout, Hi Noon, Longdrink (ALL ACCEPTABLE)
+    - Partial credit: Generic "cider" without brand = 0.5 points
+    - Award 1 point per correct item (max 5 points)
+    
+    **FLORIDA BEERS (Question 3-type)**:
+    - "First Mag" = First Magnitude (CORRECT abbrev iation)
+    - "C&G" = "C and G" = "Cypress & Grove" = "Cypress and Grove" (ALL CORRECT)
+    - Accept ampersand variations: "&" vs "and" vs "+" (ALL CORRECT)
+    - Brewery alone: "First Magnitude" without specific beer = 0.5 points (partial)
+    - Award 1 point per correct item (max 4 points)
+    
+    **WINE VARIETALS (Question 4, 6, 7 types)**:
+    - "Cab" = "Cab Sav" = Cabernet Sauvignon (CORRECT)
+    - "Chard" = Chardonnay (CORRECT)
+    - "Pinot Gris" = Pinot Grigio (CORRECT - same grape)
+    - "PG" = Pinot Grigio, "PN" = Pinot Noir (CORRECT)
+    - "Sauv Blanc" = "SB" = Sauvignon Blanc (CORRECT)
+    - Typos: Cabarnet, Shadonay, Pinot Greegio, Malbeck (ALL ACCEPTABLE)
+    - Missing brand but correct varietal = 0.75 points (they know the wine type)
+    - Wrong brand but correct varietal = 0.75 points
+    - Both brand + varietal correct = FULL points
+    
+    **WINE POUR SIZE (Question 5-type)**:
+    - Accept: "6", "6oz", "6 oz", "6 ounces", "5-6", "About 6", "Six" (ALL CORRECT)
+    - Partial credit: "5 ounces" = 0.5 points (close enough)
+    - "4-6 ounces" = 0.5 points (range too wide but shows understanding)
+    
+    **ABV DEFINITION (Question 8-type)**:
+    - Only accept "Alcohol By Volume" or minor typo "Alchohol By Volume"
+    - "Alcohol content by volume" with extra word = CORRECT
+    - Wrong answers: "Alcohol percentage", "Alcohol proof" = 0 points
+    
+    **CORE DRAFT BEERS (Question 9-type)**:
+    - Accept brand abbreviations: "OBP" = Orange Blossom Pilsner (CORRECT)
+    - Beer name alone implies style if obvious: "Big Nose" = Big Nose IPA (CORRECT)
+    - Style variations: "Hazy IPA" = "Hazy" = "NEIPA" = "IPA" (ALL ACCEPTABLE)
+    - "Red Ale" = "Irish Red" = "Amber" (ACCEPTABLE for Reel Slo)
+    - Missing style detail: Award 1 point for brand, 1 point for style (2 per beer, 10 total)
+    - Including brewery name: "Swamp Head Big Nose" = CORRECT (bonus knowledge)
+    - Typos in brand names: Orang Blossom, Freedive, BigNose, Honee Bee (ALL ACCEPTABLE)
+    
+    **OVERALL BEER & WINE PHILOSOPHY**:
+    - Grade like a bar manager during shift, not a professor grading written exam
+    - Accept semantic correctness, synonyms, abbreviations, casual terminology
+    - If a bartender would understand what the employee means = mark CORRECT
+    - Partial credit is encouraged - reward knowledge even if incomplete
+    - Do NOT penalize missing suffixes when product is obvious ("Butterscotch" = "Butterscotch Liqueur")
+    - List questions: Proportional credit (4/5 correct = 80% of points)
+    
     CONSISTENCY IS CRITICAL:
     - The SAME answer submitted multiple times MUST receive the SAME score every time
     - Use the schema to extract answers systematically
