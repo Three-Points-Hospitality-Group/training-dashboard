@@ -146,13 +146,15 @@ export const gradeSubmission = async (
        - Questions asking to "explain", "describe", "detail process" should be graded on UNDERSTANDING, not exact wording
        - Accept answers that demonstrate comprehension even if worded differently
        - Focus on: Does the student understand the concept/process?
+       - **Partial Understanding = Substantial Credit**: If student demonstrates they understand the core concept but misses minor details, award most/all points
        
        **Examples**:
        - "Explain wine service" - Accept any logical sequence of steps even if not verbatim
        - "Describe pre-bussing" - Accept any explanation that captures the core concept
        - "Detail the process" - Focus on whether key steps are present, not exact phrasing
+       - "What does 'Up' mean?" - Answer: "Shaken/Stirred with ice" shows understanding of chilled serving = FULL POINTS (they know ice is involved in prep, just not exact final presentation)
        
-       **Key Principle**: If a hospitality professional reading the answer would say "yes, they get it", award full/high credit
+       **Key Principle**: If a hospitality professional reading the answer would say "yes, they get it" OR "they're close enough", award full/high credit. Only deduct if fundamentally wrong.
     
     13. **Procedural Questions - Step Order Flexibility**:
        - For multi-step processes, minor step reordering is acceptable if logical

@@ -119,7 +119,7 @@ const OAK_HOST_KEY = [
 
 const CANTINA_HOST_KEY = [
   { id: 'ch-1', questionText: 'When is our last seating for dinner on weekdays and weekends?', correctAnswer: 'Weekdays = The last seating is at 9:00 PM. Weekends = The last seating is at 10:00 PM.', points: 2 },
-  { id: 'ch-2', questionText: 'What is our physical address?', correctAnswer: 'Cantina Añejo: 1740 West University Avenue, Gainesville, FL 32603', points: 2 },
+  { id: 'ch-2', questionText: 'What is our physical address?', correctAnswer: '1680 West University Ave Ste. 10, Gainesville, FL 32603', points: 2 },
   { id: 'ch-3', questionText: 'What is our telephone number?', correctAnswer: '(352) 781-2050', points: 1 },
   { id: 'ch-4', questionText: 'What is our website address?', correctAnswer: 'https://www.cantinaanejo.com/', points: 1 },
   { id: 'ch-5', questionText: 'Describe acceptable attire for your uniform.', correctAnswer: 'Acceptable uniform attire means maintaining a polished, professional look with closed-toe shoes (preferably heels with non-slip soles), and fitted, elegant attire such as a black dress or the assigned Cantina cocktail uniform—always kept in excellent condition. Clothing should have no writing or logos unless it’s official branding, and the goal is a sleek, stylish, and chic appearance that matches the high-energy, vibrant atmosphere of the venue. Uniform guidelines may vary by event or specific role, so always refer to your location’s dress code policy or check with management for details.', points: 3 }
