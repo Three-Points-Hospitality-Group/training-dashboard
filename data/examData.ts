@@ -95,6 +95,29 @@ const OAK_SERVER_KEY = [
   { id: 'os-10', questionText: 'List six bourbons we serve at OAK :', correctAnswer: "Any six of the following: Garrison Brothers Bourbon, Basil Hayden Bourbon, Calumet Farm Single Barrel Bourbon, Willett Family Pot Still Reserve Bourbon, Bulleit 10yr Bourbon, Knob Creek Bourbon, Angels Envy Bourbon, Wyoming Small Batch Whiskey, Maker's Mark Bourbon, Woodford Reserve Bourbon, Four Roses Single Barrel Bourbon, Rebel Yell Cask Strength Bourbon, Horse Soldier Bourbon, Bulleit Bourbon, Makers Mark 46 Bourbon, Four Roses Small Batch Bourbon, Buffalo Trace Bourbon, Rebel Yell 100 Bourbon, Evan Williams Bourbon.", points: 3 }
 ];
 
+const OAK_BRUNCH_KEY = [
+  { id: 'obr-1', questionText: 'What are ALL the specific ingredients in the Beignet Croissants?', correctAnswer: 'Baked + buttered croissants. Flash fried. Dusted in powdered sugar. Served with chocolate sauce.', points: 4 },
+  { id: 'obr-2', questionText: 'What are ALL the specific ingredients in the Blueberry Buttermilk Biscuits?', correctAnswer: 'Homemade buttermilk biscuits. Fresh blueberries. Lemon glaze. Lemon zest.', points: 4 },
+  { id: 'obr-3', questionText: 'What are ALL the specific ingredients in the Brunch Tacos?', correctAnswer: 'Fehrenbacher breakfast sausage. Scrambled eggs. Cheddar cheese. Tater tots. Green onion. Oak hot sauce.', points: 6 },
+  { id: 'obr-4', questionText: 'What are ALL the specific ingredients in the Luke\'s Bagel + Lox?', correctAnswer: 'North Atlantic cold smoked salmon. Luke\'s everything or plain bagel. Blackened cream cheese. Capers. Red tomatoes. Red onions. Dill.', points: 7 },
+  { id: 'obr-5', questionText: 'What are ALL the specific ingredients in the Farmer\'s Breakfast?', correctAnswer: 'Two eggs any style. Breakfast potatoes. Fehrenbacher sausage or hickory smoked bacon. Buttermilk biscuit.', points: 4 },
+  { id: 'obr-6', questionText: 'What are ALL the specific ingredients in the Breakfast Rice Bowl?', correctAnswer: 'Jasmine rice. Angus filet tips. Scrambled eggs. Yellow onion. Fresh cilantro. Avocado. Spicy cilantro sauce.', points: 7 },
+  { id: 'obr-7', questionText: 'What are ALL the specific ingredients in the Vegetarian Bowl?', correctAnswer: 'Breakfast potatoes. Sweet potato + black bean mix. Avocado. Asparagus. Heirloom tomatoes. Scrambled eggs. Green onion. Oak hot honey sauce.', points: 8 },
+  { id: 'obr-8', questionText: 'What are ALL the specific ingredients in the OAK Smashburger?', correctAnswer: 'Angus beef. Sharp cheddar cheese. Grilled onions. House pickle. Special sauce. Seasoned waffle fries. Brioche bun.', points: 7 },
+  { id: 'obr-9', questionText: 'What are ALL the specific ingredients in the Breakfast Burrito?', correctAnswer: 'Scrambled eggs. Cheddar cheese. Hickory smoked bacon. Tater tots. Chipotle sauce. Salsa verde.', points: 6 },
+  { id: 'obr-10', questionText: 'What are ALL the specific ingredients in the Short Rib & Eggs?', correctAnswer: 'Braised and sous vide boneless angus beef short rib. Two eggs any style. Breakfast potatoes.', points: 3 },
+  { id: 'obr-11', questionText: 'What are ALL the specific ingredients in the Country Fried Steak Sandy?', correctAnswer: 'Deep fried sirloin steak. House hollandaise. Hickory smoked bacon. Buttermilk biscuit. Breakfast potatoes.', points: 5 },
+  { id: 'obr-12', questionText: 'What are ALL the specific ingredients in the Pork Belly?', correctAnswer: 'Citrus & tarragon brined pork belly. Brown sugar & molasses rub. House hollandaise. Breakfast potatoes.', points: 4 },
+  { id: 'obr-13', questionText: 'What are ALL the specific ingredients in the Fried Green Tomato?', correctAnswer: 'Poached eggs. Fried green tomatoes. Pimento cheese. House hollandaise. Buttermilk biscuits. Breakfast potatoes.', points: 6 },
+  { id: 'obr-14', questionText: 'What are ALL the specific ingredients in the Smoked Salmon?', correctAnswer: 'North Atlantic cold smoked salmon. Capers. House hollandaise. Buttermilk biscuits. Micro greens. Breakfast potatoes.', points: 6 },
+  { id: 'obr-15', questionText: 'What are ALL the specific ingredients in the Chopped Caesar?', correctAnswer: 'Chopped baby gem lettuce. Shaved parmesan. Seasoned croutons. House made caesar dressing. (*contains raw egg)', points: 4 },
+  { id: 'obr-16', questionText: 'What are the exact ingredients listed for the Sweet Potato Pancakes? Include the potato type, batter detail, butter flavor, and syrup.', correctAnswer: 'Organic sweet potatoes. Homemade batter. Cinnamon honey butter. Bourbon maple syrup.', points: 4 },
+  { id: 'obr-17', questionText: 'List every ingredient in the Strawberry Spinach salad exactly as written on the menu (base green, all produce, cheese, nuts, and dressing components).', correctAnswer: 'Spinach. Fresh organic strawberries. Asparagus. Goat cheese. Walnuts. Fresh lemon juice. Olive oil.', points: 7 },
+  { id: 'obr-18', questionText: 'Provide the complete ingredient list for the Fried Bird & Waffle, including the chicken cut, waffle type, fruit garnish, finishing dust, and syrup.', correctAnswer: 'Fried chicken thigh. Golden malted waffle. Fresh watermelon slices. Powdered sugar. Bourbon maple syrup.', points: 5 },
+  { id: 'obr-19', questionText: 'Name all ingredients in the Cinnamon Roll Waffle, including how the base is prepared and the two toppings served with it.', correctAnswer: 'Freshly baked cinnamon roll pressed in waffle maker. Vanilla cream icing. Bourbon maple syrup.', points: 3 },
+  { id: 'obr-20', questionText: 'List every single ingredient exactly as described for the Stuffed French Toast (include the bread type, batter, filling composition, and topping).', correctAnswer: 'Thick cut brioche. Vanilla batter. Fresh blueberry compote. Lemon + mascarpone cream cheese filling.', points: 4 }
+];
+
 const OAK_BARTENDER_KEY = [
   { id: 'ob-1', questionText: 'Describe (in detail) five different styles of beer :', correctAnswer: 'Examples include: Lager, Pilsner, IPA (India Pale Ale), Stout, Porter, Wheat Beer, Pale Ale, Blone Ale, Cider', points: 5 },
   { id: 'ob-2', questionText: 'What gluten-free beers & ciders do we offer by the bottle/can ?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought ‘Mulled’ (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer). (Note: Strawberry Orange Mimosa is listed as a Blonde Ale, which typically contains gluten).", points: 4 },
@@ -146,25 +169,6 @@ const CANTINA_COCKTAILS_KEY = [
   { id: 'cc-8', questionText: 'What ingredients & measurements go into the Tequila Gold Rush ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Reposado Tequila, 0.75oz Fresh Lemon Juice, 0.75oz Honey Syrup', points: 3 },
   { id: 'cc-9', questionText: 'What ingredients & measurements go into the Cantina Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, 2 drops Saline, 2 dashes Grapefruit Bitters, Owens Rio Red Soda', points: 4 },
   { id: 'cc-10', questionText: 'What ingredients & measurements go into the Puebla Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cazadores Blanco Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, Soda Water', points: 3 },
-  { id: 'cc-11', questionText: 'What ingredients & measurements go into the Mezmerized ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Ilegal Mezcal, 1oz Lime Juice, 1oz Coco Real, 1oz Finest Call Mango, 0.5oz Golden Falernum, 0.5oz Pineapple Juice, 0.25oz Ancho Reyes, 0.5oz Orange Juice, 6 Mint Leaves, 3 drops Saline', points: 5 },
-  { id: 'cc-12', questionText: 'What ingredients & measurements go into the Ultimate Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Reposado Tequila, 1oz Citrónge, 1oz Fresh Lime Juice, 0.5oz Simple Syrup', points: 3 },
-  { id: 'cc-13', questionText: 'What ingredients & measurements go into the Violet Agave ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Patrón Silver Tequila, 0.75oz Lime Juice, 0.75oz Hibiscus Passion Fruit Syrup, 0.25oz Golden Falernum, 0.75oz Triple Sec, 1oz Pineapple Juice, 3 drops Saline', points: 4 },
-  { id: 'cc-14', questionText: 'What ingredients & measurements go into the Cantina Ranch Water ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Cazadores Blanco Tequila, 1.5oz Fresh Lime Juice, topped with approximately 3oz Topo Chico', points: 2 },
-  { id: 'cc-15', questionText: 'What ingredients & measurements go into The Bullgator ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1oz Don Julio Reposado Tequila, 1oz Fresh Lime Juice, 0.75oz Grand Marnier, 0.5oz Tres Agaves Agave Nectar, 0.25oz Fresh Orange Juice (Sidecar: Don Julio 1942 Mini)', points: 4 },
-  { id: 'cc-16', questionText: 'What ingredients & measurements go into the Stargarita Mocktail? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Veridoshé Ginesis, 0.75oz Fresh Lime Juice, 0.5oz Tres Agaves Agave Nectar, Quarter Fresh Squeezed Orange, 3 drops Saline, 1 dash Cardamom', points: 3 },
-  { id: 'cc-17', questionText: 'What ingredients & measurements go into the Miami Vice (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1oz Cool Breeze Strawberry, 2oz Cool Breeze Piña Colada Mix, 1oz Bacardi Superior Rum, 1oz Bacardi Coconut Rum', points: 3 },
-  { id: 'cc-18', questionText: 'What ingredients & measurements go into the Piña Colada (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '3oz Cool Breeze Piña Colada Mix, 1oz Bacardi Superior Rum, 1oz Bacardi Coconut Rum', points: 2 },
-  { id: 'cc-19', questionText: 'What ingredients & measurements go into our Category E11even (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cool Breeze Hurricane Mix, 3oz E11EVEN Vodka, 0.5oz Bacardi Mango Chili', points: 2 },
-  { id: 'cc-20', questionText: 'What ingredients & measurements go into our Frosé ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cool Breeze Frosé Mix, 1oz E11EVEN Vodka, 2oz Rosé Wine', points: 2 }
-];
-
-// Fallback generator for other exams to keep the UI populated
-const generateMockKey = (topic: string): any[] => [
-  { id: 'q1', questionText: `What is the primary feature of the ${topic}?`, correctAnswer: 'Specific feature details', points: 1 },
-  { id: 'q2', questionText: 'List the three steps of service.', correctAnswer: 'Greet, Take Order, Deliver', points: 3 },
-  { id: 'q3', questionText: 'What is the table number for the patio corner booth?', correctAnswer: '41', points: 1 },
-  { id: 'q4', questionText: `Explain the allergy protocol for ${topic}.`, correctAnswer: 'Notify manager and chef immediately', points: 2 },
-  { id: 'q5', questionText: 'True or False: Napkins must be folded.', correctAnswer: 'True', points: 1 }
 ];
 
 export const AVAILABLE_EXAMS: ExamDefinition[] = [
@@ -220,6 +224,14 @@ export const AVAILABLE_EXAMS: ExamDefinition[] = [
     role: Role.BARTENDER,
     subType: 'Speciality Cocktails',
     answerKey: OAK_COCKTAILS_KEY
+  },
+  {
+    id: 'oak-brunch',
+    title: 'OAK: [Server][Brunch Menu] Final Examination',
+    category: TestCategory.OAK,
+    role: Role.SERVER,
+    subType: 'Brunch Menu',
+    answerKey: OAK_BRUNCH_KEY
   },
 
   // --- Cantina ---
