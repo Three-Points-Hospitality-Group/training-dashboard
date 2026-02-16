@@ -23,6 +23,7 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
       case Role.BARTENDER: return <Wine className="h-4 w-4" />;
       case Role.SERVER: return <Utensils className="h-4 w-4" />;
       case Role.HOST: return <Users className="h-4 w-4" />;
+      case Role.SUPPLEMENTAL: return <ClipboardCheck className="h-4 w-4" />;
       default: return <ClipboardCheck className="h-4 w-4" />;
     }
   };
@@ -84,6 +85,7 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
                       <span className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold ring-1 ring-inset uppercase tracking-wider ${
                         exam.role === Role.BARTENDER ? 'bg-purple-50 text-purple-700 ring-purple-600/20' :
                         exam.role === Role.SERVER ? 'bg-blue-50 text-blue-700 ring-blue-600/20' :
+                        exam.role === Role.SUPPLEMENTAL ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20' :
                         'bg-orange-50 text-orange-700 ring-orange-600/20'
                       }`}>
                         {getRoleIcon(exam.role)}
