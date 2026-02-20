@@ -11,6 +11,7 @@ interface ExamGraderProps {
 
 export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultReady }) => {
   const [textInput, setTextInput] = useState('');
+  const [studentName, setStudentName] = useState('');
   const [isGrading, setIsGrading] = useState(false);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,11 +57,13 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const handleDownloadReport = () => {
     if (!result) return;
     
+    const currentDate = new Date().toLocaleString();
     const lines = [
       `THREE POINTS HOSPITALITY GROUP - AUTOGRADE REPORT`,
       `================================================`,
+      ...(studentName ? [`Student: ${studentName}`] : []),
       `Exam: ${result.examTitle}`,
-      `Date: ${new Date().toLocaleString()}`,
+      `Date: ${currentDate}`,
       `Score: ${result.totalScore} / ${result.maxScore} (${result.percentage.toFixed(1)}%)`,
       `\nSUMMARY:`,
       `${result.rawFeedback || 'N/A'}`,
@@ -158,6 +161,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const reset = () => {
     setResult(null);
     setTextInput('');
+    setStudentName('');
     setError(null);
   };
 
@@ -171,6 +175,14 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
         {/* This ID 'printable-report' is targeted by the handlePrint function */}
         <div id="printable-report" className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden mb-12">
           <div className="p-8 border-b border-border bg-gradient-to-r from-card to-background print:bg-white print:p-0 print:border-none">
+             {/* Student Name & Date - Top Left */}
+             {studentName && (
+               <div className="mb-4 text-sm text-muted-foreground">
+                 <div className="font-semibold text-foreground">Student: {studentName}</div>
+                 <div>Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+               </div>
+             )}
+             
              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                <div>
                   <h2 className="text-2xl font-bold text-foreground mb-1">{result.examTitle}</h2>
@@ -294,6 +306,19 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
       </div>
 
       <div className="bg-card border border-border rounded-xl shadow-lg p-6 md:p-8">
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Student Name (Optional)
+          </label>
+          <input
+            type="text"
+            value={studentName}
+            onChange={(e) => setStudentName(e.target.value)}
+            className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            placeholder="Enter student's name..."
+          />
+        </div>
+
         <div className="mb-6">
           <label className="block text-sm font-medium text-foreground mb-2">
             Student Submission
