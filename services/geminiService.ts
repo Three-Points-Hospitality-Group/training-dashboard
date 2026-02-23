@@ -7,6 +7,16 @@ const parseScore = (value: any): number => {
     return 0;
 }
 
+// Helper function to implement timeout for API calls
+const withTimeout = <T>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Request timed out after ${timeoutMs / 1000} seconds`)), timeoutMs)
+    ),
+  ]);
+};
+
 export const gradeSubmission = async (
   exam: ExamDefinition,
   studentText: string,
@@ -289,18 +299,22 @@ export const gradeSubmission = async (
   `;
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: gradingSchema,
-        temperature: 0, // Zero temperature for maximum consistency
-      }
-    });
+    // Set a 60-second timeout for the API call
+    const response = await withTimeout(
+      ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: gradingSchema,
+          temperature: 0, // Zero temperature for maximum consistency
+        }
+      }),
+      60000 // 60 second timeout
+    );
 
     const resultText = response.text;
-    if (!resultText) throw new Error("No response from AI");
+    if (!resultText) throw new Error("No response from AI - empty response received");
 
     const parsedResult = JSON.parse(resultText);
     
@@ -336,9 +350,25 @@ export const gradeSubmission = async (
     console.error("Grading failed", error);
     let msg = "Failed to grade the submission. Please try again.";
     
-    // Provide more specific error messages if possible
-    if (error.message?.includes('API key')) msg = "Invalid API Key configuration.";
-    if (error.status === 429) msg = "System is busy (Quota Exceeded). Please try again in a minute.";
+    // Provide more specific error messages
+    if (error.message?.includes('timed out')) {
+      msg = "Request timed out after 60 seconds. The AI service may be experiencing delays. Please try again.";
+    } else if (error.message?.includes('API key')) {
+      msg = "Invalid API Key configuration. Please check your API key.";
+    } else if (error.message?.includes('empty response')) {
+      msg = "Received empty response from AI service. Please try again.";
+    } else if (error.status === 429) {
+      msg = "System is busy (Rate limit exceeded). Please wait a minute and try again.";
+    } else if (error.status === 503 || error.status === 500) {
+      msg = "AI service is temporarily unavailable. Please try again in a moment.";
+    } else if (error.message?.includes('Failed to fetch') || error.message?.includes('network')) {
+      msg = "Network connection error. Please check your internet connection and try again.";
+    } else if (error.message?.includes('JSON')) {
+      msg = "Received invalid response format from AI. Please try again.";
+    } else if (error.message) {
+      // Include the actual error message if it's informative
+      msg = `Error: ${error.message}`;
+    }
     
     throw new Error(msg);
   }

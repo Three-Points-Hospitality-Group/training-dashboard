@@ -15,7 +15,9 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const [isGrading, setIsGrading] = useState(false);
   const [result, setResult] = useState<ExamResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const timerRef = useRef<number | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -43,6 +45,14 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
 
     setIsGrading(true);
     setError(null);
+    setElapsedTime(0);
+    
+    // Start elapsed time counter
+    const startTime = Date.now();
+    timerRef.current = window.setInterval(() => {
+      setElapsedTime(Math.floor((Date.now() - startTime) / 1000));
+    }, 1000);
+    
     try {
       const gradingResult = await gradeSubmission(exam, textInput);
       setResult(gradingResult);
@@ -51,6 +61,10 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
       setError(err.message || "An unexpected error occurred.");
     } finally {
       setIsGrading(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
     }
   };
 
@@ -163,6 +177,11 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
     setTextInput('');
     setStudentName('');
     setError(null);
+    setElapsedTime(0);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
   };
 
   if (result) {
@@ -358,6 +377,24 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
           </div>
         )}
 
+        {isGrading && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-blue-700">Processing submission...</span>
+              <span className="text-xs text-blue-600 font-mono">{elapsedTime}s elapsed</span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
+              <div className="h-full bg-blue-600 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+            </div>
+            <p className="text-xs text-blue-600 mt-2">
+              {elapsedTime < 10 && "Analyzing student responses..."}
+              {elapsedTime >= 10 && elapsedTime < 30 && "Comparing against answer key..."}
+              {elapsedTime >= 30 && elapsedTime < 45 && "Calculating scores and feedback..."}
+              {elapsedTime >= 45 && "Almost done, finalizing report..."}
+            </p>
+          </div>
+        )}
+
         <button
           onClick={handleGrade}
           disabled={isGrading || !textInput.trim()}
@@ -366,7 +403,7 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
           {isGrading ? (
             <>
               <RefreshCw className="w-5 h-5 animate-spin" />
-              Analyizing & Grading...
+              Analyzing & Grading...
             </>
           ) : (
             <>

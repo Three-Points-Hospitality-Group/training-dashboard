@@ -1,13 +1,15 @@
 export enum TestCategory {
   STANDARDIZED = 'Standardized',
   OAK = 'Original American Kitchen',
-  CANTINA = 'Cantina Añejo'
+  CANTINA = 'Cantina Añejo',
+  SUPPLEMENTAL = 'Supplemental'
 }
 
 export enum Role {
   BARTENDER = 'Bartender',
   SERVER = 'Server',
-  HOST = 'Host'
+  HOST = 'Host',
+  SUPPLEMENTAL = 'Supplemental'
 }
 
 export interface QuestionKey {
