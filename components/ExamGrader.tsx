@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { ExamDefinition, ExamResult } from '../types';
 import { gradeSubmission } from '../services/geminiService';
-import { UploadCloud, FileText, CheckCircle2, AlertCircle, RefreshCw, ChevronLeft, Award, Download, Printer } from 'lucide-react';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle, AlertTriangle, RefreshCw, ChevronLeft, Award, Download, Printer } from 'lucide-react';
 
 interface ExamGraderProps {
   exam: ExamDefinition;
@@ -18,6 +18,13 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const [elapsedTime, setElapsedTime] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
+
+  // Determine question status: correct, partially correct (>=50%), or incorrect
+  const getQuestionStatus = (q: { score: number; maxPoints: number; isCorrect: boolean }) => {
+    if (q.isCorrect || q.score >= q.maxPoints) return 'correct';
+    if (q.score >= q.maxPoints * 0.5) return 'partial';
+    return 'incorrect';
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -87,8 +94,10 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
     ];
 
     result.questions.forEach((q, i) => {
+      const status = getQuestionStatus(q);
+      const statusLabel = status === 'correct' ? 'CORRECT' : status === 'partial' ? 'PARTIALLY CORRECT' : 'INCORRECT';
       lines.push(`Q${q.questionId}: ${q.questionText}`);
-      lines.push(`Status: ${q.isCorrect ? 'CORRECT' : 'INCORRECT'} (${q.score}/${q.maxPoints} pts)`);
+      lines.push(`Status: ${statusLabel} (${q.score}/${q.maxPoints} pts)`);
       lines.push(`Student Answer: ${q.studentAnswer}`);
       lines.push(`Feedback: ${q.feedback}`);
       lines.push(`\n---\n`);
@@ -251,8 +260,14 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
           </div>
 
           <div className="divide-y divide-border">
-            {result.questions.map((q) => (
-              <div key={q.questionId} className={`p-6 transition-colors print:p-4 print:break-inside-avoid ${q.isCorrect ? 'bg-background hover:bg-green-50/30' : 'bg-red-50/10 hover:bg-red-50/20'}`}>
+            {result.questions.map((q) => {
+              const status = getQuestionStatus(q);
+              return (
+              <div key={q.questionId} className={`p-6 transition-colors print:p-4 print:break-inside-avoid ${
+                status === 'correct' ? 'bg-background hover:bg-green-50/30' :
+                status === 'partial' ? 'bg-orange-50/10 hover:bg-orange-50/20' :
+                'bg-red-50/10 hover:bg-red-50/20'
+              }`}>
                 <div className="flex flex-col gap-4">
                     {/* Header: ID, Question Text, Score */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -261,9 +276,13 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
                                 <span className="text-xs font-mono text-muted-foreground bg-secondary/10 px-2 py-0.5 rounded uppercase tracking-wider border border-secondary/20">
                                     Q {q.questionId}
                                 </span>
-                                {q.isCorrect ? (
+                                {status === 'correct' ? (
                                   <span className="inline-flex items-center text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full border border-green-200">
                                     <CheckCircle2 className="w-3 h-3 mr-1" /> Correct
+                                  </span>
+                                ) : status === 'partial' ? (
+                                  <span className="inline-flex items-center text-xs font-medium text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full border border-orange-200">
+                                    <AlertTriangle className="w-3 h-3 mr-1" /> Partially Correct
                                   </span>
                                 ) : (
                                   <span className="inline-flex items-center text-xs font-medium text-red-700 bg-red-100 px-2 py-0.5 rounded-full border border-red-200">
@@ -289,7 +308,11 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
                            {q.studentAnswer}
                          </p>
                        </div>
-                       <div className={`rounded-lg p-3 border shadow-sm print:shadow-none ${q.isCorrect ? 'bg-green-50/50 border-green-100/50 print:bg-green-50 print:border-green-100' : 'bg-red-50/50 border-red-100/50 print:bg-red-50 print:border-red-100'}`}>
+                       <div className={`rounded-lg p-3 border shadow-sm print:shadow-none ${
+                         status === 'correct' ? 'bg-green-50/50 border-green-100/50 print:bg-green-50 print:border-green-100' :
+                         status === 'partial' ? 'bg-orange-50/50 border-orange-100/50 print:bg-orange-50 print:border-orange-100' :
+                         'bg-red-50/50 border-red-100/50 print:bg-red-50 print:border-red-100'
+                       }`}>
                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1">Feedback</span>
                          <p className="text-sm text-muted-foreground italic">
                            {q.feedback}
@@ -298,7 +321,8 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
                      </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

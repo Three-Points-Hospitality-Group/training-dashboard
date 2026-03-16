@@ -216,7 +216,12 @@ export const gradeSubmission = async (
     
     === BEER & WINE KNOWLEDGE EXAM - SPECIFIC GUIDELINES ===
     
-    For Beer & Wine Knowledge exams, apply these additional LENIENT guidelines:
+    For Beer & Wine Knowledge exams AND OAK Bartender exams, apply these additional LENIENT guidelines:
+    
+    **BEER NAME ALIASES (ALWAYS ACCEPT THESE)**:
+    - "Dry Wrought" = "Austin" = "Austin Cider" = "Dry Wrought Mulled" (ALL CORRECT - same product)
+    - "Strawberry Orange Mimosa" = "South Beach Mimosa" = "SB Mimosa" (ALL CORRECT - same product)
+    - Accept ANY combination or variation of these names
     
     **BEER STYLE DESCRIPTIONS (Question 1-type)**:
     - Accept ANY semantically correct beer style names and variations
@@ -235,10 +240,12 @@ export const gradeSubmission = async (
     
     **GLUTEN-FREE PRODUCTS (Question 2-type)**:
     - Accept product name alone without category label ("Black Widow" without "(Cider)" = FULL CREDIT)
+    - "Dry Wrought" = "Austin" = "Austin Cider" (ALL CORRECT - same product, accept any name)
+    - "Strawberry Orange Mimosa" = "South Beach Mimosa" (ALL CORRECT - same product)
     - Brand abbreviations: "High Noon" without flavor = CORRECT (we only have one)
-    - Typos: Originl Sin, Dry Wrout, Hi Noon, Longdrink (ALL ACCEPTABLE)
+    - Typos: Originl Sin, Dry Wrout, Hi Noon, Longdrink, Austen (ALL ACCEPTABLE)
     - Partial credit: Generic "cider" without brand = 0.5 points
-    - Award 1 point per correct item (max 5 points)
+    - Award 1 point per correct item (max based on question points)
     
     **FLORIDA BEERS (Question 3-type)**:
     - "First Mag" = First Magnitude (CORRECT abbrev iation)
