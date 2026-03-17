@@ -262,7 +262,7 @@ export const gradeSubmission = async (
     
     **BEER NAME ALIASES (ALWAYS ACCEPT THESE)**:
     - "Dry Wrought" = "Austin" = "Austin Cider" = "Dry Wrought Mulled" (ALL CORRECT - same product)
-    - "Strawberry Orange Mimosa" = "South Beach Mimosa" = "SB Mimosa" (ALL CORRECT - same product)
+    - "Strawberry Orange Mimosa" = "South Beach Mimosa" = "SB Mimosa" (ALL CORRECT - same product, IS GLUTEN FREE — award full credit when listed as a gluten-free option)
     - Accept ANY combination or variation of these names
     
     **BEER STYLE DESCRIPTIONS (Question 1-type)**:

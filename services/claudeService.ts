@@ -91,6 +91,7 @@ FACTUAL QUESTIONS (when they appear in conceptual exams):
     - Glassware: "Rocks Glass" = "Double Rocks Glass" = "Old Fashioned Glass"; "Mason Jar" = "Ball Jar" = "Southern Jar"
     - Garnish extras NOT required: "on rim", "slice", "REAL", "Gentleman's Cube", "Dehydrated", "Float", "Smoked"
     - "Lime Wheel" or "Lime" = FULL credit for "Float Dehydrated Lime Wheel"
+    - **GLUTEN-FREE BEER**: "South Beach Mimosa" = "Strawberry Orange Mimosa" = GLUTEN FREE — award full credit when listed as a gluten-free option. Do NOT mark it as containing gluten.
 12. **Lists**: Proportional credit (4/5 correct = 80% of points)
 
 CONSISTENCY: The SAME answer submitted multiple times MUST receive the SAME score.
