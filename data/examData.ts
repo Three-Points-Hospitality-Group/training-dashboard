@@ -1,6 +1,6 @@
 import { ExamDefinition, Role, TestCategory } from '../types';
 
-// Real answer keys for the standar  { id: 'ob-2', questionText: 'What gluten-free beers & ciders do we offer by the bottle/can ?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought 'Mulled' (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer), Strawberry Orange Mimosa / South Beach Mimosa (Gluten Free Blonde Ale).", points: 4 },ized tests
+// Real answer keys for the standardized tests
 const BARTENDER_KEY = [
   { id: 'b1', questionText: 'Which cocktail contains the following ingredients: 1.5oz Stoli Citrus Vodka 0.75oz Triple Sec 0.5oz Cranberry Juice 0.5oz Lime Juice', correctAnswer: 'Cosmopolitan', points: 1 },
   { id: 'b2', questionText: 'List the exact ingredients in an Amaretto Sour: Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Amaretto Liqueur, 1oz Sour Mix, 1oz Egg White (optional)', points: 3 },
