@@ -73,29 +73,57 @@ export const gradeSubmission = async (
        - "top" = "splash" = "float" (CORRECT for finishing touches)
        - "soda" = "soda water" = "club soda" (CORRECT)
     
-    3. **Product Names - Lenient Matching (Grade Like a Human)**:
-       - Accept partial product names if the core identifier is present
-       - CORRECT brand = Full points
-       - WRONG brand (e.g., "Tito's" when answer is "Grey Goose") = Zero points
-       - Generic name instead of brand (e.g., "vodka" when answer is "Grey Goose") = Deduct 0.5 points
-       
-       **Product Type Suffixes (ALL ACCEPTABLE)**:
+    3. **Product Names - Brand & Specificity Rules (APPLY THESE EXACTLY)**:
+
+       **FULL CREDIT — Brand implies category, do NOT require redundant type word**:
+       - "Buffalo Trace" for "Pecan-Infused Buffalo Trace Bourbon" = FULL credit (brand implies spirit)
+       - "Evan Williams" for "Evan Williams Bourbon" = FULL credit (brand is sufficient)
+       - "Patrón Reposado" or "Patron Reposado" for Patrón Reposado = FULL credit (brand+age = full)
+       - "Engine" for "Engine Gin" = FULL credit (brand is sufficient — everyone knows Engine is a gin)
+       - "Sherry" for "Amontillado Sherry" = FULL credit (style/type sufficient)
+       - "4-Spice Syrup" OR "Pecan Syrup" for "4-Spice Pecan Syrup" = FULL credit
+       - "Martini Glass" for "Chilled Martini Glass" = FULL credit
+       - Any brand name that clearly identifies the product without saying the spirit type = FULL credit
+
+       **HALF CREDIT — Right category, wrong/missing brand (ONLY when measurement is 100% correct)**:
+       - "Vodka" when answer is "E11even Vodka" = HALF credit (missing brand)
+       - "Amaretto" when answer is "Disaronno Amaretto" = HALF credit (missing brand)
+       - "Gin" when answer is "Engine Gin" = HALF credit (missing brand)
+       - "Reposado Tequila" when answer is "Patrón Reposado" = HALF credit (missing brand)
+       - "Blanco Tequila" when answer is "Cazadores Blanco Tequila" = HALF credit (missing brand)
+       - "Coffee" when answer is "LavAzza Hot Drip Coffee" = HALF credit (missing brand — applies to ALL exams including brunch/food)
+       - Generic spirit category without brand = HALF credit
+       - IMPORTANT: If measurement is wrong OR missing, brand half-credit does NOT apply → 0 credit for that ingredient
+
+       **ZERO CREDIT**:
+       - "Bourbon" alone for "Pecan-Infused Buffalo Trace Bourbon" = 0 credit (no brand, no specific identifier)
+       - Wrong brand entirely (e.g., "Grey Goose" when answer is "E11even Vodka") = 0 credit
+       - Wrong measurement even with correct brand = 0 credit for that ingredient
+       - Missing measurement = 0 credit for that ingredient
+
+       **Product Type Suffixes (ALL ACCEPTABLE — no penalty)**:
        - "Butterscotch" = "Butterscotch Liqueur" (CORRECT - obvious what they mean)
        - "Simple" = "Simple Syrup" (CORRECT - obvious what they mean)
        - "Ginger" = "Ginger Syrup" or "Ginger Liqueur" (CORRECT - context makes it clear)
        - "Agave" = "Agave Syrup" or "Agave Nectar" (CORRECT)
        - "Triple Sec" = "Triple Sec Liqueur" (CORRECT)
-       - "Irish Cream" = "McGuire's Irish Cream" (CORRECT - generic for branded is OK)
-       
-       **Examples**:
-         * Answer key: "Grey Goose vodka" → Student: "Grey Goose" = Full points
-         * Answer key: "Grey Goose vodka" → Student: "vodka" = -0.5 points
-         * Answer key: "Grey Goose vodka" → Student: "Tito's" = 0 points (wrong brand)
-         * Answer key: "Butterscotch Liqueur" → Student: "Butterscotch" = Full points (obvious)
-         * Answer key: "Simple Syrup" → Student: "Simple" = Full points (obvious)
-         * Answer key: "Ginger Syrup" → Student: "Ginger" = Full points (obvious)
-         * Answer key: "Patron reposado" → Student: "tequila" = -0.5 points
-         * Answer key: "Patron reposado" → Student: "Patron" = Full points
+
+       **Worked Examples**:
+         * "Pecan-Infused Buffalo Trace Bourbon" → "Buffalo Trace" = FULL credit
+         * "Pecan-Infused Buffalo Trace Bourbon" → "Bourbon" = 0 credit (no brand)
+         * "E11even Vodka" → "Vodka" (with correct measurement) = HALF credit
+         * "E11even Vodka" → "Vodka" (wrong or missing measurement) = 0 credit
+         * "Engine Gin" → "Engine" = FULL credit
+         * "Engine Gin" → "Gin" (with correct measurement) = HALF credit
+         * "Patrón Reposado" → "Patron Reposado" = FULL credit (accent mark irrelevant)
+         * "Patrón Reposado" → "Reposado Tequila" (with correct measurement) = HALF credit
+         * "Disaronno Amaretto" → "Amaretto" (with correct measurement) = HALF credit
+         * "Cazadores Blanco Tequila" → "Blanco Tequila" (with correct measurement) = HALF credit
+         * "Evan Williams" → "Evan Williams" (no "Bourbon") = FULL credit
+         * "4-Spice Pecan Syrup" → "4-Spice Syrup" = FULL credit
+         * "4-Spice Pecan Syrup" → "Pecan Syrup" = FULL credit
+         * "Amontillado Sherry" → "Sherry" = FULL credit
+         * "Chilled Martini Glass" → "Martini Glass" = FULL credit
     
     4. **Spelling & Typos**: Be forgiving of minor spelling errors (1-2 characters).
        - "patron" vs "patrón" (CORRECT)
@@ -109,8 +137,8 @@ export const gradeSubmission = async (
        - "tequila, lime, triple sec" = "triple sec, tequila, lime" (CORRECT)
     
     7. **Missing Information**: Only mark incorrect if critical details are completely absent.
-       - Missing garnish when it's specified = Partial credit (-0.5 points)
-       - Wrong ingredient = Zero points
+       - Missing garnish when it's specified = Partial credit (-0.5 to -1 point)
+       - Wrong ingredient = Zero points for that ingredient
        - Missing "syrup", "liqueur", "juice" suffix when product is obvious = Full points (human-like grading)
     
     8. **Common Ingredient Synonyms (ALL ACCEPTABLE)**:
@@ -125,23 +153,20 @@ export const gradeSubmission = async (
        - "Tonic" = "Tonic Water" (CORRECT)
        - "Grenadine" alone acceptable even if brand specified (CORRECT)
     
-    9. **Brand Flexibility - Accept Reasonable Substitutions**:
-       - House/Well/Bar brands: Accept ANY generic term
-         * "House vodka" = "Well vodka" = "Bar vodka" = "vodka" (ALL CORRECT)
-         * "House rum" = "Bar rum" = "Bacardi" = "rum" (ALL CORRECT)
-       - Common substitutions within same spirit category:
-         * "Bourbon" when "Rye Whiskey" specified = -0.5 points (close enough)
-         * "Gin" when specific gin brand = -0.5 points (generic for branded)
-       - Premium upgrades: If student lists premium brand when house brand specified = Full points
-         * Answer: "House vodka" → Student: "Grey Goose" = Full points (upgraded, shows knowledge)
+    9. **Brand Flexibility - Strict Rules**:
+       - See Rule 3 above for full brand/specificity rules.
+       - House/Well brands: DO require a brand name or specific identifier — generic "vodka" alone = half credit max
+       - Premium upgrades: If student lists a premium brand when house brand specified = Full credit (shows knowledge)
     
-    10. **Measurement Tolerance - Be Flexible**:
-       - Accept ±0.25oz variations for non-critical measurements
-         * 0.5oz vs 0.75oz = Partial credit if minor ingredient
-         * 1oz vs 1.5oz for main spirit = More strict
-       - "Splash" = "Top" = "Float" = Any small amount (CORRECT)
-       - "Dash" = "Drop" = "Few drops" (CORRECT)
-       - Missing exact oz on garnish/bitters = Full points (not critical)
+    10. **Measurements — EXACT SPEC REQUIRED**:
+       - Measurements must match EXACTLY. Any deviation = 0 credit for that ingredient.
+         * 1oz vs 1.5oz = 0 credit (wrong measurement)
+         * 0.5oz vs 0.75oz = 0 credit (wrong measurement)
+       - Missing measurement entirely = 0 credit for that ingredient. No partial credit.
+       - "Splash" = "Top" = "Float" = "Dash" are acceptable ONLY when the answer key itself uses those terms
+       - "Dash" = "Drop" = "Few drops" is acceptable for bitters/tincture amounts
+       - Missing exact oz on garnish/bitters = acceptable (not critical)
+       - IMPORTANT: If measurement is wrong or missing, the brand half-credit rule (Rule 3) does NOT apply → 0 credit total for that ingredient
     
     11. **List Questions - Partial Credit Logic**:
        - "List 5 items" but student lists 4 correct = 80% credit
@@ -149,6 +174,23 @@ export const gradeSubmission = async (
        - ANY correct items from an acceptable list = proportional credit
        - Order doesn't matter unless specifically requested
        - Extra incorrect items don't penalize if minimums met
+    
+    12. **Glassware Aliases — ALL ACCEPTABLE, FULL CREDIT**:
+       - "Rocks Glass" = "Double Rocks Glass" = "Old Fashioned Glass" = FULL credit (same glass)
+       - "Mason Jar" = "Ball Jar" = "Southern Jar" = FULL credit
+       - "Martini Glass" = "Chilled Martini Glass" = FULL credit
+       - "Collins Glass" = "Highball Glass" = FULL credit
+       - "Irish Coffee Mug" = "Irish Coffee Glass" = "Irish Coffee Glass Mug" = FULL credit
+    
+    13. **Garnish Rules**:
+       - Extra garnish descriptors are NOT required and NOT penalized: "on rim", "slice", "REAL", "Gentleman's Cube", "Dehydrated", "Float", "Smoked"
+       - "Lime Wheel" OR "Lime" = FULL credit for "Float Dehydrated Lime Wheel"
+       - "Lemon Wheel" OR "Lemon" = FULL credit for garnish lemon wheel
+       - "Lavender" OR "Lavender Sprig" = FULL credit (do not require "sprig")
+       - "Rosemary" OR "Rosemary Sprig" = FULL credit (do NOT require "Smoked" — "Smoked Rosemary" is extra detail)
+       - "Expressed and twisted orange peel": "orange peel" or "orange twist" = FULL credit; "smoked" is incorrect and should be flagged
+       - Southern Sour garnish (osd-6): student must mention "Angostura Bitters" + "hearts" OR "semi-circle" = FULL credit. Describing the dragging technique is NOT required.
+       - Missing garnish entirely when specified = deduct 1-2 points depending on question value
     
     === CONCEPTUAL QUESTIONS (Processes, Explanations, Scenarios) ===
     
@@ -299,6 +341,7 @@ export const gradeSubmission = async (
     - Partial credit is encouraged - reward knowledge even if incomplete
     - Do NOT penalize missing suffixes when product is obvious ("Butterscotch" = "Butterscotch Liqueur")
     - List questions: Proportional credit (4/5 correct = 80% of points)
+    - Measurements for cocktail ingredients must still be EXACT (see Rule 10)
     
     CONSISTENCY IS CRITICAL:
     - The SAME answer submitted multiple times MUST receive the SAME score every time

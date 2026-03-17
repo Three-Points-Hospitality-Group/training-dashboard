@@ -78,9 +78,19 @@ GRADING RULES FOR CONCEPTUAL/SCENARIO QUESTIONS:
 
 FACTUAL QUESTIONS (when they appear in conceptual exams):
 
-9. **Units & Measurements**: "1" = "1oz" = "1 oz" = "1 ounce"
+9. **Units & Measurements**: Cocktail measurements must be EXACT. "1oz" ≠ "1.5oz" = 0 credit for that ingredient. Missing measurement = 0 credit.
 10. **Abbreviations**: Accept common hospitality abbreviations
-11. **Product Names**: Accept partial names if core identifier is clear
+11. **Product Names / Brand Rules (applies to ALL exams including brunch/food)**:
+    - Brand implies category = FULL credit (e.g., "Evan Williams" without "Bourbon", "Engine" without "Gin", "Buffalo Trace" without "Bourbon" = all FULL credit)
+    - Generic category without brand (e.g., "Vodka" instead of "E11even Vodka") = HALF credit ONLY when measurement is 100% correct, otherwise 0
+    - "Bourbon" alone for "Pecan-Infused Buffalo Trace Bourbon" = 0 credit (no identifying information)
+    - Wrong brand = 0 credit
+    - "Sherry" for "Amontillado Sherry" = FULL credit
+    - "4-Spice Syrup" or "Pecan Syrup" for "4-Spice Pecan Syrup" = FULL credit
+    - "Martini Glass" for "Chilled Martini Glass" = FULL credit
+    - Glassware: "Rocks Glass" = "Double Rocks Glass" = "Old Fashioned Glass"; "Mason Jar" = "Ball Jar" = "Southern Jar"
+    - Garnish extras NOT required: "on rim", "slice", "REAL", "Gentleman's Cube", "Dehydrated", "Float", "Smoked"
+    - "Lime Wheel" or "Lime" = FULL credit for "Float Dehydrated Lime Wheel"
 12. **Lists**: Proportional credit (4/5 correct = 80% of points)
 
 CONSISTENCY: The SAME answer submitted multiple times MUST receive the SAME score.
