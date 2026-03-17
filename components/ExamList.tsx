@@ -87,15 +87,15 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
       <div className="grid gap-10">
         {Object.entries(groupedExams).map(([category, exams]) => (
           <div key={category} className="space-y-4">
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               {getCategoryLogo(category) ? (
-                <img src={getCategoryLogo(category)!} alt={category} className="h-6 w-auto object-contain" />
+                <img src={getCategoryLogo(category)!} alt={category} className="h-9 w-auto object-contain" />
               ) : (
-                <div className="p-1.5 rounded-md bg-primary/6 text-primary/70">
-                  <BookOpen className="h-4 w-4" />
+                <div className="p-2 rounded-md bg-primary/6 text-primary/70">
+                  <BookOpen className="h-5 w-5" />
                 </div>
               )}
-              <h3 className="text-sm font-semibold text-foreground tracking-wide uppercase">{category}</h3>
+              <h3 className="text-base font-semibold text-foreground tracking-wide uppercase">{category}</h3>
               <span className="text-[10px] text-muted-foreground/70 font-medium">{(exams as ExamDefinition[]).length} exam{(exams as ExamDefinition[]).length !== 1 ? 's' : ''}</span>
               <div className="h-px flex-1 bg-border/40 ml-2"></div>
             </div>
