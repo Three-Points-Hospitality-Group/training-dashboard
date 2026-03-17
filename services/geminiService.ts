@@ -283,11 +283,12 @@ export const gradeSubmission = async (
     **GLUTEN-FREE PRODUCTS (Question 2-type)**:
     - Accept product name alone without category label ("Black Widow" without "(Cider)" = FULL CREDIT)
     - "Dry Wrought" = "Austin" = "Austin Cider" (ALL CORRECT - same product, accept any name)
-    - "Strawberry Orange Mimosa" = "South Beach Mimosa" (ALL CORRECT - same product)
+    - "Strawberry Orange Mimosa" = "South Beach Mimosa" = "SB Mimosa" (ALL CORRECT - same product, IS gluten free)
     - Brand abbreviations: "High Noon" without flavor = CORRECT (we only have one)
     - Typos: Originl Sin, Dry Wrout, Hi Noon, Longdrink, Austen (ALL ACCEPTABLE)
     - Partial credit: Generic "cider" without brand = 0.5 points
     - Award 1 point per correct item (max based on question points)
+    - There are 5 gluten-free options total: Original Sin Black Widow, Dry Wrought Mulled Cider, High Noon Pineapple, Long Drink Traditional, Strawberry Orange Mimosa/South Beach Mimosa
     
     **FLORIDA BEERS (Question 3-type)**:
     - "First Mag" = First Magnitude (CORRECT abbrev iation)
