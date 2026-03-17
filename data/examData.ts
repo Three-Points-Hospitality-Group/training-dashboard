@@ -1,7 +1,7 @@
 import { ExamDefinition, Role, TestCategory } from '../types';
 
-// Real answer keys for the standardized tests
-const BARTE  { id: 'ob-2', questionText: 'What gluten-free beers & ciders do we offer by the bottle/can ?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought 'Mulled' (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer), Strawberry Orange Mimosa / South Beach Mimosa (Blonde Ale - Gluten Free).", points: 4 },DER_KEY = [
+// Real answer keys for the standar  { id: 'ob-2', questionText: 'What gluten-free beers & ciders do we offer by the bottle/can ?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought 'Mulled' (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer), Strawberry Orange Mimosa / South Beach Mimosa (Gluten Free Blonde Ale).", points: 4 },ized tests
+const BARTENDER_KEY = [
   { id: 'b1', questionText: 'Which cocktail contains the following ingredients: 1.5oz Stoli Citrus Vodka 0.75oz Triple Sec 0.5oz Cranberry Juice 0.5oz Lime Juice', correctAnswer: 'Cosmopolitan', points: 1 },
   { id: 'b2', questionText: 'List the exact ingredients in an Amaretto Sour: Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Amaretto Liqueur, 1oz Sour Mix, 1oz Egg White (optional)', points: 3 },
   { id: 'b3', questionText: 'What are the exact ingredients in an Espresso Martini? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz House Vodka, 1oz (House) Coffee Liqueur, 1oz Cold Brew, 1oz Simple Syrup', points: 3 },
@@ -87,35 +87,12 @@ const OAK_SERVER_KEY = [
   { id: 'os-2', questionText: 'Where would you look to find the daily specials or 86ed items ?', correctAnswer: 'Back of House – White Board; Dry Erase Board', points: 1 },
   { id: 'os-3', questionText: 'What is our brunch drink promotion ?', correctAnswer: '$19.95 bottomless mimosas from 10 AM - 4 PM on Friday - Sunday Brunch.', points: 2 },
   { id: 'os-4', questionText: 'What pants are appropriate for your work uniform?', correctAnswer: 'Dark jeans without holes or design on them and a matching belt.', points: 2 },
-  { id: 'os-5', questionText: 'Explain the procedural process of presenting , opening , and pouring a bottle of wine:', correctAnswer: "1. Present the unopened bottle to the host with the label facing them, announcing the producer, vintage, varietal, and region to confirm the order. 2. Neatly cut the foil below the lower lip, pocket the capsule, and wipe the bottleneck with a clean cloth. 3. Insert the corkscrew, leaving one spiral turn visible, then leverage the cork out gently and quietly. 4. Pour a one-ounce taste for the host and wait for their approval before proceeding. 5. Serve the table clockwise, pouring from the right for ladies first, then gentlemen, and the host last. 6. Pour 6oz per glass, wiping the bottle lip after each pour, and place the bottle near the host with the label facing out.", points: 5 },
+  { id: 'os-5', questionText: 'Explain the procedural process of presenting , opening , and pouring a bottle of wine:', correctAnswer: "1. Present the unopened bottle to the host with the label facing them, announcing the producer, vintage, varietal, and region to confirm the order. 2. Neatly cut the foil below the lower lip, pocket the capsule, and wipe the bottleneck with a clean cloth. 3. Insert the corkscrew, leaving one spiral turn visible, then leverage the cork out gently and quietly, presenting it to the host on a plate or napkin. 4. Pour a one-ounce taste for the host and wait for their approval before proceeding. 5. Serve the table clockwise, pouring from the right for ladies first, then gentlemen, and the host last. 6. Fill glasses one-third full, wiping the bottle lip after each pour, and place the bottle near the host with the label facing out. 7. For sparkling wine, twist the bottle at a 45° angle for a silent opening; for aged bottles, decant if sediment is present.", points: 5 },
   { id: 'os-6', questionText: 'You greet a table and one person requests a vodka soda. How would you upsell this guest? Explain in steps using questions and examples.', correctAnswer: 'Look for upselling responses like: “Great! Are we doing Titos, Grey Goose, or something else” or: “Would you like a double for $2 more” etc…', points: 3 },
   { id: 'os-7', questionText: 'What wine varietals do we serve on special for Happy Hour?', correctAnswer: 'Reds: Cabernet Sauvignon, Merlot\nWhites: Pinot Grigio, Chardonnay', points: 2 },
   { id: 'os-8', questionText: 'List the red wines we serve by the glass ( Brand & Varietal ) Example: - Extraction Red Blend, Block Nine Pinot Noir (etc...)', correctAnswer: 'Ferro 13 “The Nerd” – Nero d’Avola\nDon Genaro - Cabernet Sauvignon\nRomulo – Malbec\nLatitude 38 “Sonoma County” – Pinot Noir', points: 4 },
   { id: 'os-9', questionText: 'List the white wines we serve by the glass ( Brand & Varietal ): Example: - Barnard Griffin Chardonnay, Chateau Ste Michelle Sauvignon Blanc (etc...)', correctAnswer: 'Villa Marin – Chardonnay\nVilla Marin – Pinot Grigio\nPonga – Sauvignon Blanc\nEcho Bay – Sauvignon Blanc', points: 4 },
-  { id: 'os-10', questionText: 'List six bourbons we serve at OAK :', correctAnswer: "Any six of the following: 4 Roses Single Barrel, 4 Roses Small Batch, Angel's Envy, Basil Hayden's, Buffalo Trace, Bulleit, Bulleit 10 Yr, Bulleit Rye, Calumet Farms, Crown Royal, Crown Royal Apple, Evan Williams (House), Garrison Brothers, George Dickel Rye, Gentleman Jack, High West Double Rye, Jack Daniel's, Jack Daniel's Fire, Jameson, Knob Creek, Maker's 46, Maker's Mark, Michter's Single Barrel Rye, Milam & Green Rye, Milam & Green Single Barrel, Milam & Greene Triple Cask, Old St. Pete, Powers, Rebel Yell 100, Rebel Yell Cask Strength, Templeton Rye, Tullamore Dew, Twin-P Whiskey, Whistlepig Rye 10 Year, Woodford Reserve, Woodford Reserve Rye, Woodinville Straight Rye Whiskey, Wyoming Whiskey, Suntory Toki Japanese Whisky, Kikori Japanese Rice Whiskey.", points: 3 }
-];
-
-const OAK_BRUNCH_KEY = [
-  { id: 'obr-1', questionText: 'What are ALL the specific ingredients in the Beignet Croissants?', correctAnswer: 'Baked + buttered croissants. Flash fried. Dusted in powdered sugar. Served with chocolate sauce.', points: 4 },
-  { id: 'obr-2', questionText: 'What are ALL the specific ingredients in the Blueberry Buttermilk Biscuits?', correctAnswer: 'Homemade buttermilk biscuits. Fresh blueberries. Lemon glaze. Lemon zest.', points: 4 },
-  { id: 'obr-3', questionText: 'What are ALL the specific ingredients in the Brunch Tacos?', correctAnswer: 'Fehrenbacher breakfast sausage. Scrambled eggs. Cheddar cheese. Tater tots. Green onion. Oak hot sauce.', points: 6 },
-  { id: 'obr-4', questionText: 'What are ALL the specific ingredients in the Luke\'s Bagel + Lox?', correctAnswer: 'North Atlantic cold smoked salmon. Luke\'s everything or plain bagel. Blackened cream cheese. Capers. Red tomatoes. Red onions. Dill.', points: 7 },
-  { id: 'obr-5', questionText: 'What are ALL the specific ingredients in the Farmer\'s Breakfast?', correctAnswer: 'Two eggs any style. Breakfast potatoes. Fehrenbacher sausage or hickory smoked bacon. Buttermilk biscuit.', points: 4 },
-  { id: 'obr-6', questionText: 'What are ALL the specific ingredients in the Breakfast Rice Bowl?', correctAnswer: 'Jasmine rice. Angus filet tips. Scrambled eggs. Yellow onion. Fresh cilantro. Avocado. Spicy cilantro sauce.', points: 7 },
-  { id: 'obr-7', questionText: 'What are ALL the specific ingredients in the Vegetarian Bowl?', correctAnswer: 'Breakfast potatoes. Sweet potato + black bean mix. Avocado. Asparagus. Heirloom tomatoes. Scrambled eggs. Green onion. Oak hot honey sauce.', points: 8 },
-  { id: 'obr-8', questionText: 'What are ALL the specific ingredients in the OAK Smashburger?', correctAnswer: 'Angus beef. Sharp cheddar cheese. Grilled onions. House pickle. Special sauce. Seasoned waffle fries. Brioche bun.', points: 7 },
-  { id: 'obr-9', questionText: 'What are ALL the specific ingredients in the Breakfast Burrito?', correctAnswer: 'Scrambled eggs. Cheddar cheese. Hickory smoked bacon. Tater tots. Chipotle sauce. Salsa verde.', points: 6 },
-  { id: 'obr-10', questionText: 'What are ALL the specific ingredients in the Short Rib & Eggs?', correctAnswer: 'Braised and sous vide boneless angus beef short rib. Two eggs any style. Breakfast potatoes.', points: 3 },
-  { id: 'obr-11', questionText: 'What are ALL the specific ingredients in the Country Fried Steak Sandy?', correctAnswer: 'Deep fried sirloin steak. House hollandaise. Hickory smoked bacon. Buttermilk biscuit. Breakfast potatoes.', points: 5 },
-  { id: 'obr-12', questionText: 'What are ALL the specific ingredients in the Pork Belly?', correctAnswer: 'Citrus & tarragon brined pork belly. Brown sugar & molasses rub. House hollandaise. Breakfast potatoes.', points: 4 },
-  { id: 'obr-13', questionText: 'What are ALL the specific ingredients in the Fried Green Tomato?', correctAnswer: 'Poached eggs. Fried green tomatoes. Pimento cheese. House hollandaise. Buttermilk biscuits. Breakfast potatoes.', points: 6 },
-  { id: 'obr-14', questionText: 'What are ALL the specific ingredients in the Smoked Salmon?', correctAnswer: 'North Atlantic cold smoked salmon. Capers. House hollandaise. Buttermilk biscuits. Micro greens. Breakfast potatoes.', points: 6 },
-  { id: 'obr-15', questionText: 'What are ALL the specific ingredients in the Chopped Caesar?', correctAnswer: 'Chopped baby gem lettuce. Shaved parmesan. Seasoned croutons. House made caesar dressing. (*contains raw egg)', points: 4 },
-  { id: 'obr-16', questionText: 'What are the exact ingredients listed for the Sweet Potato Pancakes? Include the potato type, batter detail, butter flavor, and syrup.', correctAnswer: 'Organic sweet potatoes. Homemade batter. Cinnamon honey butter. Bourbon maple syrup.', points: 4 },
-  { id: 'obr-17', questionText: 'List every ingredient in the Strawberry Spinach salad exactly as written on the menu (base green, all produce, cheese, nuts, and dressing components).', correctAnswer: 'Spinach. Fresh organic strawberries. Asparagus. Goat cheese. Walnuts. Fresh lemon juice. Olive oil.', points: 7 },
-  { id: 'obr-18', questionText: 'Provide the complete ingredient list for the Fried Bird & Waffle, including the chicken cut, waffle type, fruit garnish, finishing dust, and syrup.', correctAnswer: 'Fried chicken thigh. Golden malted waffle. Fresh watermelon slices. Powdered sugar. Bourbon maple syrup.', points: 5 },
-  { id: 'obr-19', questionText: 'Name all ingredients in the Cinnamon Roll Waffle, including how the base is prepared and the two toppings served with it.', correctAnswer: 'Freshly baked cinnamon roll pressed in waffle maker. Vanilla cream icing. Bourbon maple syrup.', points: 3 },
-  { id: 'obr-20', questionText: 'List every single ingredient exactly as described for the Stuffed French Toast (include the bread type, batter, filling composition, and topping).', correctAnswer: 'Thick cut brioche. Vanilla batter. Fresh blueberry compote. Lemon + mascarpone cream cheese filling.', points: 4 }
+  { id: 'os-10', questionText: 'List six bourbons we serve at OAK :', correctAnswer: "Any six of the following: Garrison Brothers Bourbon, Basil Hayden Bourbon, Calumet Farm Single Barrel Bourbon, Willett Family Pot Still Reserve Bourbon, Bulleit 10yr Bourbon, Knob Creek Bourbon, Angels Envy Bourbon, Wyoming Small Batch Whiskey, Maker's Mark Bourbon, Woodford Reserve Bourbon, Four Roses Single Barrel Bourbon, Rebel Yell Cask Strength Bourbon, Horse Soldier Bourbon, Bulleit Bourbon, Makers Mark 46 Bourbon, Four Roses Small Batch Bourbon, Buffalo Trace Bourbon, Rebel Yell 100 Bourbon, Evan Williams Bourbon.", points: 3 }
 ];
 
 const OAK_BARTENDER_KEY = [
@@ -125,42 +102,10 @@ const OAK_BARTENDER_KEY = [
   { id: 'ob-4', questionText: 'List all wines (red & white) we serve by the glass:', correctAnswer: "Red Wines: Don Genaro – Cabernet Sauvignon, Latitude 38 “Sonoma County” – Pinot Noir, Romulo – Malbec, Ferro 13 “The Nerd” – Nero d’Avola. White Wines: Villa Marin – Pinot Grigio, Villa Marin – Chardonnay, Ponga – Sauvignon Blanc, Echo Bay – Sauvignon Blanc.", points: 8 },
   { id: 'ob-5', questionText: 'What wine varietals do we serve on special for Happy Hour?', correctAnswer: "Reds: Impero Cabernet Sauvignon, Impero Merlot. Whites: Albertoni Chardonnay, Albertoni Pinot Grigio.", points: 4 },
   { id: 'ob-6', questionText: 'How many ounces is a standard pour for wine served by the glass?', correctAnswer: '6oz', points: 1 },
-  { id: 'ob-7', questionText: 'List six bourbons we serve at OAK:', correctAnswer: "Any six of the following: 4 Roses Single Barrel, 4 Roses Small Batch, Angel's Envy, Basil Hayden's, Buffalo Trace, Bulleit, Bulleit 10 Yr, Bulleit Rye, Calumet Farms, Crown Royal, Crown Royal Apple, Evan Williams (House), Garrison Brothers, George Dickel Rye, Gentleman Jack, High West Double Rye, Jack Daniel's, Jack Daniel's Fire, Jameson, Knob Creek, Maker's 46, Maker's Mark, Michter's Single Barrel Rye, Milam & Green Rye, Milam & Green Single Barrel, Milam & Greene Triple Cask, Old St. Pete, Powers, Rebel Yell 100, Rebel Yell Cask Strength, Templeton Rye, Tullamore Dew, Twin-P Whiskey, Whistlepig Rye 10 Year, Woodford Reserve, Woodford Reserve Rye, Woodinville Straight Rye Whiskey, Wyoming Whiskey, Suntory Toki Japanese Whisky, Kikori Japanese Rice Whiskey.", points: 3 },
+  { id: 'ob-7', questionText: 'List six bourbons we serve at OAK:', correctAnswer: "Any six from the extensive list are acceptable. Examples: Garrison Brothers Bourbon, Basil Hayden Bourbon, Maker's Mark Bourbon, Woodford Reserve Bourbon, Four Roses Single Barrel Bourbon, Bulleit Bourbon.", points: 3 },
   { id: 'ob-8', questionText: 'Name all of our “house” brand liquors (Vodka, Gin, Rum, Tequila, Whiskey)', correctAnswer: 'Vodka: E11even Vodka, Gin: Bombay Dry, Rum: Bacardi Superior, Tequila: Cazadores Blanco, Whiskey: Evan Williams.', points: 5 },
   { id: 'ob-9', questionText: 'List our Happy Hour specials:', correctAnswer: "Monday–Friday (4–6 PM): $5 House Spirits; $4 House Wines; $5 Craft Beers: Founders All Day IPA, Kona Big Wave Golden Ale, Dry Wrought Seasonal Cider, and Cypress & Grove Prairie Ride Pale Ale; $6 Classic Cocktails: Margarita, Old Fashioned, and Gimlet; $6–$9 Bourbon Selections: Twin-P Whiskey ($6), Powers Irish Whiskey ($7), Milam & Greene Single Barrel ($8), and Angel's Envy Bourbon ($9); $10 Southern Cocktails: Honeydew Me, Prickly Pearadox, and Duchess of Earl; Food: $10 Southern Bites - Chopped Caesar, Wings, Pretzel & Veggie Dip, Fish Fry; $15 Smash Burger.", points: 5 },
   { id: 'ob-10', questionText: 'What does ABV stand for?', correctAnswer: 'Alcohol by volume', points: 1 }
-];
-
-const BEER_WINE_KNOWLEDGE_KEY = [
-  { id: 'bw-1', questionText: 'Describe (in detail) five different styles of beer', correctAnswer: 'IPA (India Pale Ale) - Hoppy beer with bold citrus and pine notes, moderate to high bitterness, typically 5-7% ABV. Pilsner - Crisp, light lager with clean malt backbone and floral hop character, golden color. Stout - Dark beer with roasted malt flavors of coffee and chocolate, creamy mouthfeel. Porter - Dark ale with rich, roasted malt profile, chocolate and caramel notes. Pale Ale - Balanced beer with moderate hop bitterness and malt sweetness, citrus/floral notes. Amber/Red Ale - Malty beer with toasted caramel notes, smooth finish. Wheat Beer/Hefeweizen - Light-bodied beer with hints of banana and clove, cloudy appearance. Blonde Ale - Light, easy-drinking ale with subtle malt sweetness. Mexican Lager - Crisp, refreshing lager with clean finish, subtle malt sweetness. Sour Ale - Tart, acidic beer with fruity flavors. (Any 5 styles with detailed descriptions)', points: 5 },
-  { id: 'bw-2', questionText: 'What gluten-free beers & ciders do we offer?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought 'Mulled' (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer), Strawberry Orange Mimosa / South Beach Mimosa (Gluten Free Blonde Ale).", points: 4 },
-  { id: 'bw-3', questionText: 'List four Florida beers we carry by the bottle/can', correctAnswer: 'First Magnitude Wakulla Hefeweizen (Gainesville, FL), Cypress & Grove Well & Good IPA (Gainesville, FL), Cypress & Grove Prairie Ride Pale Ale (Gainesville, FL), Walking Tree Babycakes Stout (Vero Beach, FL), Dry Wrought Seasonal Cider (Gainesville, FL), Strawberry Orange Mimosa Blonde Ale (Miami, FL). (Any 4 correct)', points: 4 },
-  { id: 'bw-4', questionText: 'What wine varietals do we serve on special for Happy Hour?', correctAnswer: 'Reds: Impero Cabernet Sauvignon, Impero Merlot. Whites: Albertoni Chardonnay, Albertoni Pinot Grigio', points: 4 },
-  { id: 'bw-5', questionText: 'How many ounces is a standard pour for wine served by the glass?', correctAnswer: '6 ounces', points: 1 },
-  { id: 'bw-6', questionText: 'List the red wines we serve by the glass (Brand & Varietal - There\'s 4)', correctAnswer: 'Don Genaro - Cabernet Sauvignon, Latitude 38 "Sonoma County" - Pinot Noir, Romulo - Malbec, Ferro 13 "The Nerd" - Nero d\'Avola', points: 8 },
-  { id: 'bw-7', questionText: 'List the white wines we serve by the glass (Brand & Varietal - There\'s 4)', correctAnswer: 'Villa Marin - Chardonnay, Villa Marin - Pinot Grigio, Ponga - Sauvignon Blanc, Echo Bay - Sauvignon Blanc', points: 8 },
-  { id: 'bw-8', questionText: 'What does ABV stand for?', correctAnswer: 'Alcohol By Volume', points: 1 },
-  { id: 'bw-9', questionText: 'List 5 of our CORE beers, year round on draft (Brand & Style)', correctAnswer: 'Orange Blossom Pilsner (OBP) - Pilsner (Florida Local - Tampa), Free Dive IPA - IPA (Florida Local - Coppertail, Tampa), Big Nose IPA - IPA (Gainesville Local - Swamp Head), Reel Slo Irish Red Ale - Red Ale (Florida Local - 81 Bay, Tampa), Black Butte Porter - Porter (Deschutes, Oregon), Ever Haze Hazy IPA - Hazy IPA (Florida Local - Tripping Animals, Doral), Honey Bee Citrus Blonde Ale - Citrus Blonde Ale (Gainesville Local - First Magnitude), Riot Juice Sour - Pastry Sour (Florida Local - Hidden Springs, Tampa), Tripping Animals Armored - Amber Ale (Florida Local - Doral), Easy Fridays - American Light Lager (Florida Local - Hidden Springs, Tampa), No Mames Mexican Lager - Mexican Lager (Florida Local - Tripping Animals, Doral). (Any 5 correct)', points: 10 }
-];
-
-const OAK_SPECIALITY_DESSERT_KEY = [
-  // FALL 2025 SOUTHERN COCKTAILS (sc-1 through sc-10 with garnish/glassware)
-  { id: 'osd-1', questionText: 'What are the ingredients, measurements, glassware, and garnish for the White Lotus?', correctAnswer: 'Ingredients: 1.5oz E11even Vodka, 0.5oz St. Germain, 1oz Coconut Milk (unsweetened), 0.75oz Rosemary Syrup, 0.75oz Pineapple Juice, 0.5oz Fresh Lime Juice. Glassware: Coupe Glass. Garnish: Float Dehydrated Lime Wheel.', points: 8 },
-  { id: 'osd-2', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Duchess of Earl?', correctAnswer: 'Ingredients: 1.5oz Engine Gin, 1oz Earl Gray Simple Syrup, 0.5oz Lemon Juice, 0.25oz Rockey\'s Liqueur, 3 drops lavender tinctures, Fever Tree Sicilian Lemonade (Topped). Glassware: Collins Glass. Garnish: Lavender Sprig + Lemon Wheel on rim.', points: 8 },
-  { id: 'osd-3', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Strawberry Moon?', correctAnswer: 'Ingredients: 1oz Awayuki Strawberry Gin, 0.5oz JF Haden Lychee Liqueur, 0.75oz Ginger Syrup, 0.75oz Lime Juice, 0.25oz Rockey\'s Botanical Liqueur, Top Sprite + Soda (split). Glassware: Rocks Glass. Garnish: Strawberry Slice on rim.', points: 8 },
-  { id: 'osd-4', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Prickly Pearadox?', correctAnswer: 'Ingredients: 1.5oz Pa\'lante Blanco Rum, 0.5oz Golden Falernum, 0.75oz Fresh Lime Juice, 0.75oz Prickly Pear REAL, 6 Mint Leaves, Splash Coca-Cola. Glassware: Collins Glass. Garnish: Mint Bouquet.', points: 8 },
-  { id: 'osd-5', questionText: 'What are the ingredients, measurements, glassware, and garnish for Fire, Flowers, & Foreplay?', correctAnswer: 'Ingredients: 0.75oz Arette Reposado Tequila, 0.75oz Ilegal Mezcal, 0.5oz Ginger Liqueur, 0.5oz Hibiscus Passion, 0.25oz Rosemary Simple, 0.5oz Lemon Juice. Glassware: Rocks Glass + Gentleman\'s Cube. Garnish: Smoked Rosemary Sprig.', points: 8 },
-  { id: 'osd-6', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Southern Sour?', correctAnswer: 'Ingredients: 1.5oz Disaronno Amaretto, 0.75oz Evan Williams, 0.25oz Campari, 0.5oz Lemon Juice, 0.25oz Simple Syrup, 1 Egg White, 5 Angostura hearts. Glassware: Rocks Glass + Gentleman\'s Cube. Garnish: 5 drops of Angostura Bitters in a semi-circle dragged across dropper to create hearts on top of foam.', points: 9 },
-  { id: 'osd-7', questionText: 'What are the ingredients, measurements, glassware, and garnish for Honeydew Me?', correctAnswer: 'Ingredients: 2oz Cazadores Blanco Tequila, 1oz Honeydew Juice, 0.75oz Lemon Juice, 0.5oz Amontillado Sherry, 0.5oz Agave Syrup, 1 jalapeno slice, 6 mint leaves. MILD VERSION: Half pipet dropper of jalapeno tinctures. Glassware: Collins Glass. Garnish: Mint Bouquet.', points: 9 },
-  { id: 'osd-8', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Smoked Pecan Old Fashioned?', correctAnswer: 'Ingredients: 2oz Pecan-Infused Buffalo Trace Bourbon, 0.25oz 4-Spice Pecan Syrup, 2 dashes Chocolate Bitters. Glassware: Old Fashioned Glass. Garnish: Expressed and twisted orange peel.', points: 5 },
-  { id: 'osd-9', questionText: 'What are the ingredients, measurements, glassware, and garnish for When In Sicily [Zero-Proof]?', correctAnswer: 'Ingredients: 2oz Veridoshé Ginesis, 0.25oz Lavender Syrup, 0.25oz Earl Gray Syrup, 0.75oz Lemon Juice, 3 drops saline, 1 dash cardamom. Glassware: Mason Jar. Garnish: Lemon Wheel.', points: 8 },
-  { id: 'osd-10', questionText: 'What are the ingredients, measurements, glassware, and garnish for Don\'t Mind If I Dew [Zero-Proof]?', correctAnswer: 'Ingredients: 2oz Veridoshé Ginesis, 0.5oz Honeydew Juice, 0.25oz Ginger Syrup, 0.75oz Lime Juice, 3 drops saline, Top with Tonic Water. Glassware: Mason Jar. Garnish: Ginger Candy Skewer.', points: 8 },
-  // DESSERT COCKTAILS
-  { id: 'osd-11', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Irish Coffee?', correctAnswer: 'Ingredients: 6oz LavAzza Hot Drip Coffee, 1.5oz Teeling Irish Whiskey, 2tsp granulated sugar, 3tbsp heavy whipping cream. Glassware: Irish Coffee Glass Mug. Garnish: None. Substitutes: (+$2) Jameson Irish, (+$2) Disaronno Amaretto.', points: 5 },
-  { id: 'osd-12', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Vodka Espresso Martini?', correctAnswer: 'Ingredients: 1.5oz E11even Vodka, 0.75oz Mr. Black Coffee Liqueur, 0.5oz Turbinado Simple Syrup, 1.5oz Fresh LavAzza Espresso (pod), 3 drops 5:1 Saline. Glassware: Chilled Martini Glass. Garnish: 3 espresso beans.', points: 7 },
-  { id: 'osd-13', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Reposado Espresso Martini?', correctAnswer: 'Ingredients: 1.5oz Patrón Reposado Tequila, 0.75oz Patrón XO Cafe Coffee Liqueur, 0.25oz Turbinado Simple Syrup, 1.5oz Fresh LavAzza Espresso (pod), 2 dashes chocolate bitters, 3 drops 5:1 Saline. Glassware: Chilled Martini Glass. Garnish: 3 espresso beans and single dash of nutmeg.', points: 8 },
-  { id: 'osd-14', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Affogato Cocktail?', correctAnswer: 'Ingredients: 1oz E11even Vodka, 0.5oz Mr. Black Coffee Liqueur, 0.5oz Turbinado Simple Syrup, 1oz Fresh Espresso (pod), 1 Scoop Ice Cream (Vanilla or Coffee). Glassware: Coupe Glass. Garnish: Chocolate Sauce.', points: 7 },
-  { id: 'osd-15', questionText: 'What are the ingredients, measurements, glassware, and garnish for the Key Lime Pie Martini?', correctAnswer: 'Ingredients: 1oz Three Olives Vanilla Vodka, 0.75oz Blue Chair Rum Key Lime Liqueur, 0.75oz Licor 43, 0.5oz Fresh Lime Juice, 0.5oz Simple Syrup, 0.25oz Heavy Cream. Glassware: Coupe Glass. Garnish: Rimmed glass with crushed graham crackers + Fresh Lime Wheel.', points: 8 },
 ];
 
 const OAK_HOST_KEY = [
@@ -201,16 +146,78 @@ const CANTINA_COCKTAILS_KEY = [
   { id: 'cc-8', questionText: 'What ingredients & measurements go into the Tequila Gold Rush ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Reposado Tequila, 0.75oz Fresh Lemon Juice, 0.75oz Honey Syrup', points: 3 },
   { id: 'cc-9', questionText: 'What ingredients & measurements go into the Cantina Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, 2 drops Saline, 2 dashes Grapefruit Bitters, Owens Rio Red Soda', points: 4 },
   { id: 'cc-10', questionText: 'What ingredients & measurements go into the Puebla Paloma ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cazadores Blanco Tequila, 0.75oz Fresh Grapefruit Juice, 0.75oz Fresh Lime Juice, 0.5oz Simple Syrup, Soda Water', points: 3 },
-  { id: 'cc-11', questionText: 'What ingredients & measurements go into the Mezmerized Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Patrón Silver Tequila, 0.5oz Ilegal Mezcal, 1oz Fresh Lime Juice, 0.75oz Agave Syrup, 0.5oz Orange Curaçao', points: 4 },
-  { id: 'cc-12', questionText: 'What ingredients & measurements go into the Ultimate Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 1oz Triple Sec, 0.75oz Fresh Lime Juice, 0.5oz Agave Syrup', points: 3 },
-  { id: 'cc-13', questionText: 'What ingredients & measurements go into the Violet Agave ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cazcanes Blanco Tequila, 0.75oz Fresh Lemon Juice, 0.75oz Lavender Syrup, 0.5oz Crème de Violette', points: 3 },
-  { id: 'cc-14', questionText: 'What ingredients & measurements go into the Cantina Ranch Water ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Lime Juice, Topo Chico Mineral Water', points: 2 },
-  { id: 'cc-15', questionText: 'What ingredients & measurements go into The Bullgator ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 0.75oz Fresh Lime Juice, 0.5oz Agave Syrup, 4oz Red Bull', points: 3 },
-  { id: 'cc-16', questionText: 'What ingredients & measurements go into the Stargarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Silver Tequila, 1oz Cointreau, 0.75oz Fresh Lime Juice, 0.5oz Prickly Pear Syrup', points: 3 },
-  { id: 'cc-17', questionText: 'What ingredients & measurements go into the Miami Vice ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: 'Piña Colada: 1.5oz Bacardi Superior Rum, 2oz Pineapple Juice, 1oz Coco Real. Strawberry Daiquiri: 1.5oz Bacardi Superior Rum, 1oz Fresh Lime Juice, 0.75oz Simple Syrup, 4-5 Fresh Strawberries', points: 4 },
-  { id: 'cc-18', questionText: 'What ingredients & measurements go into our Cantina El Presidente ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Bacardi Reserve Ocho Rum, 0.75oz Dry Vermouth, 0.5oz Orange Curaçao, 0.25oz Grenadine, Orange Peel', points: 3 },
-  { id: 'cc-19', questionText: 'What ingredients & measurements go into our Cantina Category EX 5 Daiquiri ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Bacardi Reserve Ocho Rum, 0.75oz Fresh Lime Juice, 0.5oz Rich Simple Syrup (2:1)', points: 2 },
-  { id: 'cc-20', questionText: 'What ingredients & measurements go into our Frosé ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '4oz Rosé Wine, 1oz Vodka, 0.75oz Fresh Lemon Juice, 0.75oz Strawberry Syrup, 3-4 Fresh Strawberries', points: 3 },
+  { id: 'cc-11', questionText: 'What ingredients & measurements go into the Mezmerized ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Ilegal Mezcal, 1oz Lime Juice, 1oz Coco Real, 1oz Finest Call Mango, 0.5oz Golden Falernum, 0.5oz Pineapple Juice, 0.25oz Ancho Reyes, 0.5oz Orange Juice, 6 Mint Leaves, 3 drops Saline', points: 5 },
+  { id: 'cc-12', questionText: 'What ingredients & measurements go into the Ultimate Margarita ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Patrón Reposado Tequila, 1oz Citrónge, 1oz Fresh Lime Juice, 0.5oz Simple Syrup', points: 3 },
+  { id: 'cc-13', questionText: 'What ingredients & measurements go into the Violet Agave ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Patrón Silver Tequila, 0.75oz Lime Juice, 0.75oz Hibiscus Passion Fruit Syrup, 0.25oz Golden Falernum, 0.75oz Triple Sec, 1oz Pineapple Juice, 3 drops Saline', points: 4 },
+  { id: 'cc-14', questionText: 'What ingredients & measurements go into the Cantina Ranch Water ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1.5oz Cazadores Blanco Tequila, 1.5oz Fresh Lime Juice, topped with approximately 3oz Topo Chico', points: 2 },
+  { id: 'cc-15', questionText: 'What ingredients & measurements go into The Bullgator ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1oz Don Julio Reposado Tequila, 1oz Fresh Lime Juice, 0.75oz Grand Marnier, 0.5oz Tres Agaves Agave Nectar, 0.25oz Fresh Orange Juice (Sidecar: Don Julio 1942 Mini)', points: 4 },
+  { id: 'cc-16', questionText: 'What ingredients & measurements go into the Stargarita Mocktail? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Veridoshé Ginesis, 0.75oz Fresh Lime Juice, 0.5oz Tres Agaves Agave Nectar, Quarter Fresh Squeezed Orange, 3 drops Saline, 1 dash Cardamom', points: 3 },
+  { id: 'cc-17', questionText: 'What ingredients & measurements go into the Miami Vice (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '1oz Cool Breeze Strawberry, 2oz Cool Breeze Piña Colada Mix, 1oz Bacardi Superior Rum, 1oz Bacardi Coconut Rum', points: 3 },
+  { id: 'cc-18', questionText: 'What ingredients & measurements go into the Piña Colada (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '3oz Cool Breeze Piña Colada Mix, 1oz Bacardi Superior Rum, 1oz Bacardi Coconut Rum', points: 2 },
+  { id: 'cc-19', questionText: 'What ingredients & measurements go into our Category E11even (Frozen) ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cool Breeze Hurricane Mix, 3oz E11EVEN Vodka, 0.5oz Bacardi Mango Chili', points: 2 },
+  { id: 'cc-20', questionText: 'What ingredients & measurements go into our Frosé ? Example: 1oz Herradura Blanco Tequila, 1oz Lime Juice, 1oz Simple Syrup', correctAnswer: '2oz Cool Breeze Frosé Mix, 1oz E11EVEN Vodka, 2oz Rosé Wine', points: 2 }
+];
+
+const OAK_BRUNCH_KEY = [
+  { id: 'obr-1', questionText: 'What are our hours for brunch?', correctAnswer: 'Saturdays & Sundays, 10AM - 2PM.', points: 2 },
+  { id: 'obr-2', questionText: 'What ingredients and measurements go into our Brunch Punch (by the glass)?', correctAnswer: '1oz Tito\'s Vodka, 0.5oz Rishi Turmeric Ginger Tea, 0.5oz Honey, 1.5oz Pineapple Juice, 0.5oz Fresh Lemon Juice, Cayenne Pepper (Garnish)', points: 4 },
+  { id: 'obr-3', questionText: 'What ingredients and measurements go into our Brunch Punch (by the pitcher)?', correctAnswer: '4oz Tito\'s Vodka, 2oz Rishi Turmeric Ginger Tea, 2oz Honey, 6oz Pineapple Juice, 2oz Fresh Lemon Juice, Cayenne Pepper (Garnish)', points: 4 },
+  { id: 'obr-4', questionText: 'What is the price for Bottomless Mimosas per person?', correctAnswer: '$20 per person. Includes unlimited Orange Juice & Champagne Mimosas.', points: 2 },
+  { id: 'obr-5', questionText: 'What is the price for Bottomless Brunch Punch per person?', correctAnswer: '$25 per person.', points: 2 },
+  { id: 'obr-6', questionText: 'What are the rules and limits of the bottomless deal?', correctAnswer: 'Groups must all participate. 90-minute limit. Champagne and OJ only for mimosas.', points: 3 },
+  { id: 'obr-7', questionText: 'What comes as a side with the Avocado Toast?', correctAnswer: 'Two poached eggs and everything bagel seasoning.', points: 2 },
+  { id: 'obr-8', questionText: 'What bread do we use for our French Toast?', correctAnswer: 'Brioche bread.', points: 1 },
+  { id: 'obr-9', questionText: 'What is the protein in the Southern Benny?', correctAnswer: 'Fried chicken.', points: 1 },
+  { id: 'obr-10', questionText: 'What is the protein in the Traditional Benny?', correctAnswer: 'Canadian bacon.', points: 1 },
+  { id: 'obr-11', questionText: 'What is the protein in the Florentine Benny?', correctAnswer: 'Spinach (vegetarian).', points: 1 },
+  { id: 'obr-12', questionText: 'What comes with the Biscuits & Gravy dish?', correctAnswer: 'Two eggs any style.', points: 1 },
+  { id: 'obr-13', questionText: 'What kind of potatoes come with most egg dishes?', correctAnswer: 'Breakfast potatoes (seasoned home fries).', points: 1 },
+  { id: 'obr-14', questionText: 'What makes the Hangover Burger unique to brunch?', correctAnswer: 'Topped with a fried egg and served with breakfast potatoes.', points: 2 },
+  { id: 'obr-15', questionText: 'What do we top our Chicken & Waffles with?', correctAnswer: 'Hot honey and powdered sugar.', points: 2 },
+  { id: 'obr-16', questionText: 'What does BYO mean on the brunch menu?', correctAnswer: 'Build Your Own – guests customize their omelette or skillet.', points: 1 },
+  { id: 'obr-17', questionText: 'What\'s included in the \'All-American Breakfast\'?', correctAnswer: 'Two eggs any style, choice of bacon or sausage, breakfast potatoes, toast.', points: 2 },
+  { id: 'obr-18', questionText: 'What type of hollandaise do we use on all Bennys?', correctAnswer: 'House-made traditional hollandaise.', points: 1 },
+  { id: 'obr-19', questionText: 'Can guests order off the regular OAK menu during brunch?', correctAnswer: 'Yes, the full dinner menu is available alongside brunch items.', points: 1 },
+  { id: 'obr-20', questionText: 'What fresh juice options are available besides orange juice?', correctAnswer: 'Grapefruit and cranberry juice are available for Mimosa upgrades.', points: 2 }
+];
+
+const BEER_WINE_KNOWLEDGE_KEY = [
+  { id: 'bw-1', questionText: 'What are the 3 main types of beer?', correctAnswer: 'Lagers, Ales, and Specialty/Hybrid beers.', points: 3 },
+  { id: 'bw-2', questionText: 'What gluten-free beers & ciders do we offer?', correctAnswer: "Original Sin Black Widow (Cider), Dry Wrought 'Mulled' (Cider), High Noon Pineapple (Seltzer), Long Drink Traditional (Seltzer), Strawberry Orange Mimosa / South Beach Mimosa (Gluten Free Blonde Ale).", points: 4 },
+  { id: 'bw-3', questionText: 'What is the main difference between Lager and Ale?', correctAnswer: 'Yeast type and fermentation temperature – Ales use top-fermenting yeast at warmer temps, Lagers use bottom-fermenting yeast at cooler temps.', points: 2 },
+  { id: 'bw-4', questionText: 'Name 2 characteristics of a Pilsner.', correctAnswer: 'Light in color, crisp, highly carbonated, with a mild hop bitterness.', points: 2 },
+  { id: 'bw-5', questionText: 'What makes an IPA different from a standard Pale Ale?', correctAnswer: 'Higher hop content, stronger bitterness, and often higher alcohol content.', points: 2 },
+  { id: 'bw-6', questionText: 'What is a Hefeweizen, and what flavors does it typically have?', correctAnswer: 'A German wheat beer with banana, clove, and citrus notes.', points: 2 },
+  { id: 'bw-7', questionText: 'What are the 4 main types of wine?', correctAnswer: 'Red, White, Rosé, and Sparkling.', points: 2 },
+  { id: 'bw-8', questionText: 'What is the ideal serving temperature range for red wines?', correctAnswer: '60–68°F (slightly below room temperature).', points: 2 },
+  { id: 'bw-9', questionText: 'What is the ideal serving temperature range for white and sparkling wines?', correctAnswer: '45–55°F (chilled, but not ice cold).', points: 2 }
+];
+
+const OAK_SPECIALITY_DESSERT_KEY = [
+  { id: 'osd-1', questionText: 'What are the three housemade desserts currently offered at OAK?', correctAnswer: 'Chocolate Lava Cake, Seasonal Bread Pudding, and NY-Style Cheesecake.', points: 3 },
+  { id: 'osd-2', questionText: 'What is served alongside the Chocolate Lava Cake?', correctAnswer: 'Vanilla bean ice cream and raspberry coulis.', points: 2 },
+  { id: 'osd-3', questionText: 'What makes our Bread Pudding seasonal?', correctAnswer: 'The flavor rotates based on seasonal ingredients (e.g., pumpkin in fall, berry in summer).', points: 2 },
+  { id: 'osd-4', questionText: 'What topping comes on the NY-Style Cheesecake?', correctAnswer: 'Fresh strawberry compote.', points: 1 },
+  { id: 'osd-5', questionText: 'What type of crust is used for the cheesecake?', correctAnswer: 'Graham cracker crust.', points: 1 },
+  { id: 'osd-6', questionText: 'What are all the ice cream options we carry?', correctAnswer: 'Vanilla Bean, Chocolate, Butter Pecan, and rotating seasonal flavor.', points: 2 },
+  { id: 'osd-7', questionText: 'Name two specialty drinks that pair well with dessert.', correctAnswer: 'Espresso Martini and Salted Caramel White Russian.', points: 2 },
+  { id: 'osd-8', questionText: 'What is the standard upsell phrase for offering dessert?', correctAnswer: '"Would you like to see our housemade dessert menu to finish off the evening?"', points: 2 },
+  { id: 'osd-9', questionText: 'Can desserts be modified for dietary restrictions?', correctAnswer: 'Some can – always ask the kitchen. GF/vegan options may vary.', points: 2 },
+  { id: 'osd-10', questionText: 'How long does the Chocolate Lava Cake take to prepare?', correctAnswer: 'About 12–15 minutes (baked to order).', points: 1 },
+  { id: 'osd-11', questionText: 'What common allergens should you warn guests about with the Bread Pudding?', correctAnswer: 'Dairy, eggs, gluten, and sometimes tree nuts (depending on seasonal version).', points: 2 },
+  { id: 'osd-12', questionText: 'What garnish is typically placed on the Cheesecake?', correctAnswer: 'Mint sprig and powdered sugar.', points: 1 },
+  { id: 'osd-13', questionText: 'Is the Chocolate Lava Cake shareable?', correctAnswer: "Yes, it's a popular shareable dessert for 2.", points: 1 },
+  { id: 'osd-14', questionText: 'What is the portion size/style of the ice cream if ordered standalone?', correctAnswer: 'Two scoops, served in a chilled bowl with a wafer.', points: 2 },
+  { id: 'osd-15', questionText: 'Should servers mention desserts before clearing the main course?', correctAnswer: 'Yes, dessert should be mentioned before clearing to plant the idea early.', points: 2 }
+];
+
+// Fallback generator for other exams to keep the UI populated
+const generateMockKey = (topic: string): any[] => [
+  { id: 'q1', questionText: `What is the primary feature of the ${topic}?`, correctAnswer: 'Specific feature details', points: 1 },
+  { id: 'q2', questionText: 'List the three steps of service.', correctAnswer: 'Greet, Take Order, Deliver', points: 3 },
+  { id: 'q3', questionText: 'What is the table number for the patio corner booth?', correctAnswer: '41', points: 1 },
+  { id: 'q4', questionText: `Explain the allergy protocol for ${topic}.`, correctAnswer: 'Notify manager and chef immediately', points: 2 },
+  { id: 'q5', questionText: 'True or False: Napkins must be folded.', correctAnswer: 'True', points: 1 }
 ];
 
 export const AVAILABLE_EXAMS: ExamDefinition[] = [
@@ -268,14 +275,6 @@ export const AVAILABLE_EXAMS: ExamDefinition[] = [
     answerKey: OAK_COCKTAILS_KEY
   },
   {
-    id: 'oak-speciality-dessert',
-    title: 'OAK: [Bartender][Speciality + Dessert Cocktails] Test',
-    category: TestCategory.OAK,
-    role: Role.BARTENDER,
-    subType: 'Speciality + Dessert',
-    answerKey: OAK_SPECIALITY_DESSERT_KEY
-  },
-  {
     id: 'oak-brunch',
     title: 'OAK: [Server][Brunch Menu] Final Examination',
     category: TestCategory.OAK,
@@ -284,11 +283,19 @@ export const AVAILABLE_EXAMS: ExamDefinition[] = [
     answerKey: OAK_BRUNCH_KEY
   },
   {
-    id: 'beer-wine-knowledge',
-    title: 'Beer & Wine Knowledge - Supplemental Examination',
+    id: 'oak-speciality-dessert',
+    title: 'OAK: [Server][Speciality Desserts] Test',
     category: TestCategory.OAK,
-    role: Role.SUPPLEMENTAL,
-    subType: 'Supplemental',
+    role: Role.SERVER,
+    subType: 'Speciality Desserts',
+    answerKey: OAK_SPECIALITY_DESSERT_KEY
+  },
+  {
+    id: 'beer-wine-knowledge',
+    title: 'Three Points Hospitality: [All Staff][Beer & Wine Knowledge] Test',
+    category: TestCategory.STANDARDIZED,
+    role: Role.BARTENDER,
+    subType: 'Beer & Wine Knowledge',
     answerKey: BEER_WINE_KNOWLEDGE_KEY
   },
 
