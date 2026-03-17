@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Header } from './components/Header';
 import { ExamList } from './components/ExamList';
 import { ExamGrader } from './components/ExamGrader';
@@ -8,28 +8,45 @@ import { ExamDefinition, ExamResult } from './types';
 const App: React.FC = () => {
   const [selectedExam, setSelectedExam] = useState<ExamDefinition | null>(null);
   const [examResult, setExamResult] = useState<ExamResult | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleSelectExam = useCallback((exam: ExamDefinition) => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedExam(exam);
+      setIsTransitioning(false);
+    }, 150);
+  }, []);
+
+  const handleBack = useCallback(() => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setSelectedExam(null);
+      setIsTransitioning(false);
+    }, 150);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary/20">
       <Header />
       
-      <main className="flex-1 container mx-auto px-4 py-8 md:py-12">
+      <main className={`flex-1 container mx-auto px-4 py-8 md:py-12 transition-all duration-150 ${isTransitioning ? 'opacity-0 translate-y-1' : 'opacity-100 translate-y-0'}`}>
         {selectedExam ? (
           <ExamGrader 
             exam={selectedExam} 
-            onBack={() => setSelectedExam(null)}
+            onBack={handleBack}
             onResultReady={setExamResult}
           />
         ) : (
-          <ExamList onSelectExam={setSelectedExam} />
+          <ExamList onSelectExam={handleSelectExam} />
         )}
       </main>
 
-      <footer className="border-t border-border/40 py-8 bg-card/30">
+      <footer className="border-t border-border/40 py-6 bg-white/50">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-sm font-medium text-foreground">© {new Date().getFullYear()} Three Points Hospitality Group.</p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Powered by <span className="text-primary font-semibold">OpsFlow Intelligence</span>
+          <p className="text-xs font-medium text-muted-foreground">© {new Date().getFullYear()} Three Points Hospitality Group</p>
+          <p className="text-[11px] text-muted-foreground/70 mt-1">
+            Powered by <span className="text-primary font-medium">OpsFlow</span>
           </p>
         </div>
       </footer>

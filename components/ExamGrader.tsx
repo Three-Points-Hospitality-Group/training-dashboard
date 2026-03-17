@@ -17,8 +17,12 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   const [error, setError] = useState<string | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [gradedBy, setGradedBy] = useState<'gemini' | 'claude' | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const timerRef = useRef<number | null>(null);
+
+  const totalPoints = exam.answerKey.reduce((sum, q) => sum + q.points, 0);
+  const questionCount = exam.answerKey.length;
 
   // Determine question status: correct, partially correct (>=50%), or incorrect
   const getQuestionStatus = (q: { score: number; maxPoints: number; isCorrect: boolean }) => {
@@ -138,14 +142,14 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
           theme: {
             extend: {
               colors: {
-                primary: "oklch(0.45 0.14 255)", 
-                secondary: "oklch(0.92 0.04 255)",
-                muted: "oklch(0.96 0.01 260)",
-                background: "oklch(0.985 0 0)",
-                foreground: "oklch(0.20 0.02 260)",
-                border: "oklch(0.90 0.02 260)",
+                primary: "oklch(0.44 0.10 230)", 
+                secondary: "oklch(0.92 0.02 230)",
+                muted: "oklch(0.965 0.005 230)",
+                background: "oklch(0.98 0.005 230)",
+                foreground: "oklch(0.15 0.02 230)",
+                border: "oklch(0.91 0.01 230)",
                 card: "oklch(1 0 0)",
-                "muted-foreground": "oklch(0.55 0.04 260)",
+                "muted-foreground": "oklch(0.50 0.02 230)",
               },
               fontFamily: {
                 sans: ['Inter', 'sans-serif'],
@@ -199,138 +203,160 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
 
   if (result) {
     return (
-      <div className="w-full max-w-4xl mx-auto animate-in fade-in zoom-in-95 duration-500">
-        <button onClick={reset} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-primary transition-colors no-print">
+      <div className="w-full max-w-4xl mx-auto">
+        <button onClick={reset} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors no-print">
           <ChevronLeft className="mr-1 h-4 w-4" /> Grade another student
         </button>
 
         {/* This ID 'printable-report' is targeted by the handlePrint function */}
-        <div id="printable-report" className="bg-card border border-border rounded-2xl shadow-xl overflow-hidden mb-12">
-          <div className="p-8 border-b border-border bg-gradient-to-r from-card to-background print:bg-white print:p-0 print:border-none">
-             {/* Student Name & Date - Top Left */}
+        <div id="printable-report" className="bg-white border border-border/70 rounded-lg shadow-sm overflow-hidden mb-12">
+          <div className="p-6 md:p-8 border-b border-border/60 print:bg-white print:p-0 print:border-none">
+             {/* Student Name & Date */}
              {studentName && (
-               <div className="mb-4 text-sm text-muted-foreground">
-                 <div className="font-semibold text-foreground">Student: {studentName}</div>
+               <div className="mb-3 text-xs text-muted-foreground">
+                 <div className="font-medium text-foreground text-sm">Student: {studentName}</div>
                  <div>Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
                </div>
              )}
              
              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                <div>
-                  <h2 className="text-2xl font-bold text-foreground mb-1">{result.examTitle}</h2>
-                  <p className="text-muted-foreground">Automated Grading Report</p>
+                  <h2 className="text-xl font-semibold text-foreground mb-0.5">{result.examTitle}</h2>
+                  <p className="text-sm text-muted-foreground">Automated Grading Report</p>
                   {gradedBy && (
                     <div className="mt-2 no-print">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${
                         gradedBy === 'claude' 
-                          ? 'bg-orange-100 text-orange-700 border border-orange-200' 
-                          : 'bg-blue-100 text-blue-700 border border-blue-200'
+                          ? 'bg-orange-50 text-orange-600 border border-orange-200/60' 
+                          : 'bg-sky-50 text-sky-600 border border-sky-200/60'
                       }`}>
                         <Cpu className="w-3 h-3" />
-                        Graded by {gradedBy === 'claude' ? 'Claude AI' : 'Gemini AI'}
+                        {gradedBy === 'claude' ? 'Claude AI' : 'Gemini AI'}
                       </span>
                     </div>
                   )}
                </div>
                
                {/* Score & Actions */}
-               <div className="flex flex-col-reverse md:flex-row items-end md:items-center gap-6 w-full md:w-auto">
-                 {/* Action Buttons (Hidden in Print) */}
-                 <div className="flex gap-4 no-print">
+               <div className="flex flex-col-reverse md:flex-row items-end md:items-center gap-5 w-full md:w-auto">
+                 {/* Action Buttons */}
+                 <div className="flex gap-3 no-print">
                    <button 
                      onClick={handleDownloadReport}
-                     className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold border border-border bg-white hover:bg-gray-50 text-foreground rounded-lg transition-all shadow-sm hover:shadow-md active:translate-y-0.5"
+                     className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium border border-border bg-white hover:bg-accent/50 text-foreground rounded-md transition-all"
                    >
-                     <Download className="w-4 h-4 text-primary" /> 
-                     Text File
+                     <Download className="w-3.5 h-3.5 text-muted-foreground" /> 
+                     Download
                    </button>
                    <button 
                      onClick={handlePrint}
-                     className="flex items-center gap-2 px-6 py-2.5 text-sm font-bold bg-primary text-white hover:bg-primary/90 rounded-lg transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0"
+                     className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-primary text-white hover:bg-primary/90 rounded-md transition-all"
                    >
-                     <Printer className="w-4 h-4 text-white" /> 
-                     Print PDF
+                     <Printer className="w-3.5 h-3.5" /> 
+                     Print
                    </button>
                  </div>
 
                  {/* Score Display */}
-                 <div className="flex items-center gap-4">
+                 <div className="flex items-center gap-3">
                    <div className="text-right">
-                     <div className="text-3xl font-bold text-primary">{result.totalScore} <span className="text-lg text-muted-foreground">/ {result.maxScore}</span></div>
-                     <div className={`text-sm font-medium ${result.percentage >= 80 ? 'text-green-600' : result.percentage >= 60 ? 'text-yellow-600' : 'text-red-600'}`}>
-                       {result.percentage.toFixed(1)}% Score
+                     <div className="text-2xl font-semibold text-foreground">{result.totalScore} <span className="text-base text-muted-foreground font-normal">/ {result.maxScore}</span></div>
+                     <div className={`text-xs font-medium ${result.percentage >= 80 ? 'text-emerald-600' : result.percentage >= 60 ? 'text-amber-600' : 'text-red-500'}`}>
+                       {result.percentage.toFixed(1)}%
                      </div>
                    </div>
-                   <div className={`p-3 rounded-full print:hidden ${result.percentage >= 80 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                      <Award className="h-8 w-8" />
+                   <div className={`p-2 rounded-lg print:hidden ${result.percentage >= 80 ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'}`}>
+                      <Award className="h-6 w-6" />
                    </div>
                  </div>
                </div>
              </div>
              {result.rawFeedback && (
-               <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/10 text-sm text-foreground print:bg-gray-50 print:border-gray-200">
-                 <span className="font-semibold text-primary block mb-1">Summary:</span>
-                 {result.rawFeedback}
+               <div className="mt-5 p-3 bg-accent/50 rounded-md border border-border/50 text-sm text-foreground print:bg-gray-50 print:border-gray-200">
+                 <span className="font-medium text-foreground block mb-0.5 text-xs uppercase tracking-wider">Summary</span>
+                 <span className="text-muted-foreground text-sm">{result.rawFeedback}</span>
                </div>
              )}
+
+             {/* Score breakdown bar */}
+             {(() => {
+               const correct = result.questions.filter(q => getQuestionStatus(q) === 'correct').length;
+               const partial = result.questions.filter(q => getQuestionStatus(q) === 'partial').length;
+               const incorrect = result.questions.filter(q => getQuestionStatus(q) === 'incorrect').length;
+               const total = result.questions.length;
+               return (
+                 <div className="mt-4">
+                   <div className="flex items-center gap-4 mb-1.5">
+                     <span className="text-[11px] text-muted-foreground flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-sm bg-emerald-500"></span> {correct} correct</span>
+                     <span className="text-[11px] text-muted-foreground flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-sm bg-amber-400"></span> {partial} partial</span>
+                     <span className="text-[11px] text-muted-foreground flex items-center gap-1"><span className="inline-block w-2 h-2 rounded-sm bg-red-400"></span> {incorrect} incorrect</span>
+                   </div>
+                   <div className="w-full h-1.5 bg-accent rounded-full overflow-hidden flex">
+                     {correct > 0 && <div className="bg-emerald-500 h-full transition-all" style={{ width: `${(correct/total)*100}%` }}></div>}
+                     {partial > 0 && <div className="bg-amber-400 h-full transition-all" style={{ width: `${(partial/total)*100}%` }}></div>}
+                     {incorrect > 0 && <div className="bg-red-400 h-full transition-all" style={{ width: `${(incorrect/total)*100}%` }}></div>}
+                   </div>
+                 </div>
+               );
+             })()}
           </div>
 
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-border/60">
             {result.questions.map((q) => {
               const status = getQuestionStatus(q);
               return (
-              <div key={q.questionId} className={`p-6 transition-colors print:p-4 print:break-inside-avoid ${
-                status === 'correct' ? 'bg-background hover:bg-green-50/30' :
-                status === 'partial' ? 'bg-orange-50/10 hover:bg-orange-50/20' :
+              <div key={q.questionId} className={`p-5 md:p-6 transition-colors print:p-4 print:break-inside-avoid ${
+                status === 'correct' ? 'bg-white hover:bg-emerald-50/20' :
+                status === 'partial' ? 'bg-amber-50/10 hover:bg-amber-50/20' :
                 'bg-red-50/10 hover:bg-red-50/20'
               }`}>
-                <div className="flex flex-col gap-4">
-                    {/* Header: ID, Question Text, Score */}
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                        <div className="space-y-2 flex-1">
+                <div className="flex flex-col gap-3">
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-3">
+                        <div className="space-y-1.5 flex-1">
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-mono text-muted-foreground bg-secondary/10 px-2 py-0.5 rounded uppercase tracking-wider border border-secondary/20">
-                                    Q {q.questionId}
+                                <span className="text-[10px] font-mono text-muted-foreground bg-accent px-1.5 py-0.5 rounded uppercase tracking-wider border border-border/50">
+                                    Q{q.questionId}
                                 </span>
                                 {status === 'correct' ? (
-                                  <span className="inline-flex items-center text-xs font-medium text-green-700 bg-green-100 px-2 py-0.5 rounded-full border border-green-200">
-                                    <CheckCircle2 className="w-3 h-3 mr-1" /> Correct
+                                  <span className="inline-flex items-center text-[11px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-md border border-emerald-200/60">
+                                    <CheckCircle2 className="w-3 h-3 mr-0.5" /> Correct
                                   </span>
                                 ) : status === 'partial' ? (
-                                  <span className="inline-flex items-center text-xs font-medium text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full border border-orange-200">
-                                    <AlertTriangle className="w-3 h-3 mr-1" /> Partially Correct
+                                  <span className="inline-flex items-center text-[11px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200/60">
+                                    <AlertTriangle className="w-3 h-3 mr-0.5" /> Partial
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center text-xs font-medium text-red-700 bg-red-100 px-2 py-0.5 rounded-full border border-red-200">
-                                    <AlertCircle className="w-3 h-3 mr-1" /> Incorrect
+                                  <span className="inline-flex items-center text-[11px] font-medium text-red-600 bg-red-50 px-1.5 py-0.5 rounded-md border border-red-200/60">
+                                    <AlertCircle className="w-3 h-3 mr-0.5" /> Incorrect
                                   </span>
                                 )}
                             </div>
-                            <h3 className="text-lg font-medium text-foreground leading-snug">
+                            <h3 className="text-sm font-medium text-foreground leading-snug">
                                 {q.questionText}
                             </h3>
                         </div>
                         
                         <div className="flex-shrink-0 text-right md:pl-4">
-                            <div className="text-xl font-bold text-foreground">{q.score} <span className="text-sm text-muted-foreground font-normal">/ {q.maxPoints} pts</span></div>
+                            <div className="text-lg font-semibold text-foreground">{q.score} <span className="text-xs text-muted-foreground font-normal">/ {q.maxPoints}</span></div>
                         </div>
                     </div>
 
-                    {/* Content: Answer & Feedback */}
-                    <div className="grid md:grid-cols-2 gap-4 mt-2">
-                       <div className="bg-background/80 border border-border/60 rounded-lg p-3 shadow-sm print:border-gray-300 print:shadow-none">
-                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1">Student Answer</span>
-                         <p className="text-sm text-foreground font-medium whitespace-pre-wrap">
+                    {/* Content */}
+                    <div className="grid md:grid-cols-2 gap-3 mt-1">
+                       <div className="bg-accent/40 border border-border/40 rounded-md p-2.5 print:border-gray-300">
+                         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">Student Answer</span>
+                         <p className="text-xs text-foreground whitespace-pre-wrap">
                            {q.studentAnswer}
                          </p>
                        </div>
-                       <div className={`rounded-lg p-3 border shadow-sm print:shadow-none ${
-                         status === 'correct' ? 'bg-green-50/50 border-green-100/50 print:bg-green-50 print:border-green-100' :
-                         status === 'partial' ? 'bg-orange-50/50 border-orange-100/50 print:bg-orange-50 print:border-orange-100' :
-                         'bg-red-50/50 border-red-100/50 print:bg-red-50 print:border-red-100'
+                       <div className={`rounded-md p-2.5 border ${
+                         status === 'correct' ? 'bg-emerald-50/40 border-emerald-100/60 print:bg-green-50 print:border-green-100' :
+                         status === 'partial' ? 'bg-amber-50/40 border-amber-100/60 print:bg-orange-50 print:border-orange-100' :
+                         'bg-red-50/40 border-red-100/60 print:bg-red-50 print:border-red-100'
                        }`}>
-                         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-1">Feedback</span>
-                         <p className="text-sm text-muted-foreground italic">
+                         <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block mb-1">Feedback</span>
+                         <p className="text-xs text-muted-foreground italic">
                            {q.feedback}
                          </p>
                        </div>
@@ -346,50 +372,73 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <button onClick={onBack} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
+    <div className="w-full max-w-3xl mx-auto">
+      <button onClick={onBack} className="mb-6 flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
         <ChevronLeft className="mr-1 h-4 w-4" /> Back to assessments
       </button>
 
-      <div className="mx-auto mb-12 max-w-3xl text-center">
-        <div className="clerk-badge bg-primary/10 text-primary border border-primary/20 backdrop-blur-sm mb-6">
-          <FileText className="h-4 w-4 mr-2" />
+      <div className="mx-auto mb-8 max-w-3xl">
+        <div className="inline-flex items-center gap-1.5 bg-primary/5 border border-primary/10 text-primary px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide mb-4">
+          <FileText className="h-3 w-3" />
           Grading Interface
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight text-foreground">
+        <h2 className="text-xl md:text-2xl font-semibold mb-2 tracking-tight text-foreground">
           {exam.title}
         </h2>
-        <p className="text-lg text-muted-foreground">
-          Paste the student's full submission text or upload a file. The AI will parse answers even with typos.
+        <p className="text-sm text-muted-foreground">
+          Paste the student's submission or upload a file. The AI will parse answers even with typos.
         </p>
+        <div className="flex gap-3 mt-3">
+          <span className="text-[11px] text-muted-foreground/70 bg-accent/60 px-2 py-0.5 rounded-md border border-border/40">{questionCount} questions</span>
+          <span className="text-[11px] text-muted-foreground/70 bg-accent/60 px-2 py-0.5 rounded-md border border-border/40">{totalPoints} total points</span>
+        </div>
       </div>
 
-      <div className="bg-card border border-border rounded-xl shadow-lg p-6 md:p-8">
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-foreground mb-2">
-            Student Name (Optional)
+      <div className="bg-white border border-border/70 rounded-lg shadow-sm p-5 md:p-6">
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-foreground mb-1.5">
+            Student Name <span className="text-muted-foreground font-normal">(Optional)</span>
           </label>
           <input
             type="text"
             value={studentName}
             onChange={(e) => setStudentName(e.target.value)}
-            className="w-full p-3 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+            className="w-full p-2.5 rounded-md border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all outline-none"
             placeholder="Enter student's name..."
           />
         </div>
 
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-foreground mb-2">
+        <div className="mb-5">
+          <label className="block text-xs font-medium text-foreground mb-1.5">
             Student Submission
           </label>
-          <div className="relative">
+          <div 
+            className={`relative rounded-md border-2 border-dashed transition-colors ${isDragOver ? 'border-primary/40 bg-primary/5' : 'border-transparent'}`}
+            onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+            onDragLeave={() => setIsDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              setIsDragOver(false);
+              const file = e.dataTransfer.files?.[0];
+              if (file && (file.name.endsWith('.txt') || file.name.endsWith('.md'))) {
+                const reader = new FileReader();
+                reader.onload = (event) => { if (event.target?.result) setTextInput(event.target.result as string); };
+                reader.readAsText(file);
+              }
+            }}
+          >
             <textarea
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
-              className="w-full h-64 p-4 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-all resize-none font-mono text-sm"
-              placeholder="Paste the full test content here..."
+              onKeyDown={(e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && textInput.trim() && !isGrading) {
+                  handleGrade();
+                }
+              }}
+              className="w-full h-56 p-3 rounded-md border border-border bg-background text-foreground text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all resize-none font-mono outline-none"
+              placeholder="Paste the full test content here or drag & drop a .txt file..."
             />
-            <div className="absolute bottom-4 right-4 flex gap-2">
+            <div className="absolute bottom-3 right-3 flex gap-2">
               <input
                 type="file"
                 ref={fileInputRef}
@@ -399,34 +448,35 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-2 px-3 py-1.5 bg-secondary/10 hover:bg-secondary/20 text-secondary text-xs font-medium rounded-md transition-colors backdrop-blur-sm"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-accent hover:bg-accent/80 text-muted-foreground text-[11px] font-medium rounded-md transition-colors border border-border/50"
               >
-                <UploadCloud className="w-3 h-3" /> Upload File
+                <UploadCloud className="w-3 h-3" /> Upload
               </button>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            Supported formats: Plain text copy-paste or .txt files.
+          <p className="text-[11px] text-muted-foreground mt-1.5 flex justify-between">
+            <span>Supported: Plain text, .txt files, or drag & drop</span>
+            {textInput.length > 0 && <span className="text-muted-foreground/50 font-mono">{textInput.length.toLocaleString()} chars</span>}
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
-            <AlertCircle className="w-5 h-5 flex-shrink-0" />
-            <span className="text-sm font-medium">{error}</span>
+          <div className="mb-5 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2.5 text-red-700">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm">{error}</span>
           </div>
         )}
 
         {isGrading && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-blue-700">Processing submission...</span>
-              <span className="text-xs text-blue-600 font-mono">{elapsedTime}s elapsed</span>
+          <div className="mb-5 p-3 bg-sky-50 border border-sky-200 rounded-md">
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-sm font-medium text-sky-700">Processing submission...</span>
+              <span className="text-[11px] text-sky-600 font-mono">{elapsedTime}s</span>
             </div>
-            <div className="w-full bg-blue-200 rounded-full h-2 overflow-hidden">
-              <div className="h-full bg-blue-600 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+            <div className="w-full bg-sky-200 rounded-full h-1.5 overflow-hidden">
+              <div className="h-full bg-sky-500 rounded-full animate-pulse" style={{ width: '100%' }}></div>
             </div>
-            <p className="text-xs text-blue-600 mt-2">
+            <p className="text-[11px] text-sky-600 mt-1.5">
               {elapsedTime < 10 && "Analyzing student responses..."}
               {elapsedTime >= 10 && elapsedTime < 30 && "Comparing against answer key..."}
               {elapsedTime >= 30 && elapsedTime < 45 && "Calculating scores and feedback..."}
@@ -438,27 +488,28 @@ export const ExamGrader: React.FC<ExamGraderProps> = ({ exam, onBack, onResultRe
         <button
           onClick={handleGrade}
           disabled={isGrading || !textInput.trim()}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-primary hover:bg-primary/90 text-white font-semibold shadow-md hover:shadow-lg hover:scale-[1.01] transition-all disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-md bg-primary hover:bg-primary/90 text-white text-sm font-medium shadow-sm hover:shadow transition-all disabled:opacity-50 disabled:pointer-events-none"
         >
           {isGrading ? (
             <>
-              <RefreshCw className="w-5 h-5 animate-spin" />
+              <RefreshCw className="w-4 h-4 animate-spin" />
               Analyzing & Grading...
             </>
           ) : (
             <>
-              <CheckCircle2 className="w-5 h-5" />
+              <CheckCircle2 className="w-4 h-4" />
               Grade Submission
+              <kbd className="ml-2 hidden sm:inline-flex items-center gap-0.5 rounded border border-white/20 bg-white/10 px-1.5 py-0.5 text-[10px] font-mono">⌘↵</kbd>
             </>
           )}
         </button>
         {/* Engine indicator */}
         <div className="text-center mt-2">
-          <span className={`inline-flex items-center gap-1 text-xs ${
-            getGradingEngine(exam.id) === 'claude' ? 'text-orange-500' : 'text-blue-500'
+          <span className={`inline-flex items-center gap-1 text-[11px] ${
+            getGradingEngine(exam.id) === 'claude' ? 'text-orange-500' : 'text-sky-500'
           }`}>
             <Cpu className="w-3 h-3" />
-            {getGradingEngine(exam.id) === 'claude' ? 'Claude AI — Optimized for scenario questions' : 'Gemini AI — Optimized for factual questions'}
+            {getGradingEngine(exam.id) === 'claude' ? 'Claude AI — Scenario questions' : 'Gemini AI — Factual questions'}
           </span>
         </div>
       </div>
