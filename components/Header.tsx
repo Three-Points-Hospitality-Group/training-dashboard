@@ -1,15 +1,20 @@
 import React from 'react';
-import { ShieldCheck, Zap } from 'lucide-react';
+import { ShieldCheck, Zap, ClipboardCheck, Users } from 'lucide-react';
 
 const BASE = import.meta.env.BASE_URL || '/';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  currentPage?: 'grader' | 'assigner';
+  onNavigate?: (page: 'grader' | 'assigner') => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ currentPage = 'grader', onNavigate }) => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-white/80 backdrop-blur-xl">
       <div className="container mx-auto flex h-18 items-center justify-between px-4">
         <div className="flex items-center">
           {/* Organization Brand */}
-          <div className="flex items-center select-none">
+          <div className="flex items-center select-none cursor-pointer" onClick={() => onNavigate?.('grader')}>
             <img src={`${BASE}logos/tph-name-logo.png`} alt="Three Points Hospitality" className="h-14 w-auto object-contain" />
           </div>
           
@@ -23,13 +28,52 @@ export const Header: React.FC = () => {
             </span>
           </div>
         </div>
+
+        {/* Navigation Tabs */}
+        <nav className="hidden md:flex items-center gap-1">
+          <button
+            onClick={() => onNavigate?.('grader')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              currentPage === 'grader'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+            }`}
+          >
+            <ClipboardCheck className="h-4 w-4" />
+            Exam Grader
+          </button>
+          <button
+            onClick={() => onNavigate?.('assigner')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              currentPage === 'assigner'
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+            }`}
+          >
+            <Users className="h-4 w-4" />
+            Test Assigner
+          </button>
+        </nav>
         
         <div className="flex items-center gap-3">
-           {/* Mobile Badge */}
-           <div className="md:hidden">
-              <span className="inline-flex items-center justify-center h-7 w-7 rounded-full bg-primary/8 text-primary">
-                <Zap className="h-3.5 w-3.5" />
-              </span>
+           {/* Mobile Nav */}
+           <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={() => onNavigate?.('grader')}
+                className={`flex items-center justify-center h-8 w-8 rounded-full transition-colors ${
+                  currentPage === 'grader' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                <ClipboardCheck className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => onNavigate?.('assigner')}
+                className={`flex items-center justify-center h-8 w-8 rounded-full transition-colors ${
+                  currentPage === 'assigner' ? 'bg-primary/10 text-primary' : 'text-muted-foreground'
+                }`}
+              >
+                <Users className="h-4 w-4" />
+              </button>
            </div>
 
           <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-border/60 bg-accent/50 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
