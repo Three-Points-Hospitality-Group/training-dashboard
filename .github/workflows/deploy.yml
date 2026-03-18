@@ -33,6 +33,8 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          TRAINUAL_PASSWORD: ${{ secrets.TRAINUAL_PASSWORD }}
+          TRAINUAL_PROXY: https://trainual-proxy.onrender.com
         run: npm run build
       
       - name: Upload artifact
