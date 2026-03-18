@@ -1,11 +1,18 @@
 /**
  * Client-side Trainual API service.
- * Calls the Trainual API directly from the browser using Basic Auth.
- * Credentials are injected at build time via Vite env variables.
+ * Routes through a CORS proxy since Trainual's API doesn't support
+ * cross-origin browser requests directly.
+ *
+ * CORS Proxy options (set VITE_TRAINUAL_PROXY in .env.local):
+ *   - Local dev:  http://localhost:3001  (run: npm run dev:server)
+ *   - Production: Deploy server.ts to Render/Railway and set the URL
  */
 
-// Password is injected at build time by Vite's define config
 const _pw: string = process.env.TRAINUAL_PASSWORD as string;
+const _proxy: string = process.env.TRAINUAL_PROXY as string;
+
+// Proxy base URL — falls back to relative /api for local dev
+const PROXY_BASE = (_proxy && _proxy !== 'undefined') ? _proxy.replace(/\/$/, '') : '/api/trainual';
 
 const TRAINUAL_CONFIG = {
   ADMIN_EMAIL: 'devin@threepointshospitality.com',
@@ -20,14 +27,11 @@ function buildAuthHeader(): string {
 }
 
 async function trainualFetch(endpoint: string, method: string = 'GET', payload?: any): Promise<any> {
-  const url = `${TRAINUAL_CONFIG.API_BASE}${endpoint}`;
+  // Use the proxy — direct browser calls to Trainual are blocked by CORS
+  const url = `${PROXY_BASE}${endpoint}`;
   const options: RequestInit = {
     method,
-    headers: {
-      'Authorization': buildAuthHeader(),
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
+    headers: { 'Content-Type': 'application/json' }
   };
   if (payload) options.body = JSON.stringify(payload);
 
@@ -53,25 +57,28 @@ async function trainualFetch(endpoint: string, method: string = 'GET', payload?:
 }
 
 export async function fetchUsers() {
-  return await trainualFetch('/users?curriculums_assigned=true&roles_assigned=true') || [];
+  return await trainualFetch('/users') || [];
 }
 
 export async function fetchSubjects() {
-  return await trainualFetch('/curriculums?assigned_users=true') || [];
+  return await trainualFetch('/subjects') || [];
 }
 
 export async function fetchSubjectTests(subjectId: number) {
-  return await trainualFetch(`/curriculums/${subjectId}/surveys`) || [];
+  return await trainualFetch(`/subjects/${subjectId}/tests`) || [];
 }
 
 export async function assignCurriculums(userId: number, curriculumIds: number[]) {
-  return await trainualFetch(`/users/${userId}/assign_curriculums`, 'PUT', { curriculum_ids: curriculumIds });
+  return await trainualFetch(`/users/${userId}/assign`, 'PUT', { curriculum_ids: curriculumIds });
 }
 
 export async function unassignCurriculums(userId: number, curriculumIds: number[]) {
-  return await trainualFetch(`/users/${userId}/unassign_curriculums`, 'PUT', { curriculum_ids: curriculumIds });
+  return await trainualFetch(`/users/${userId}/unassign`, 'PUT', { curriculum_ids: curriculumIds });
 }
 
 export function isTrainualConfigured(): boolean {
-  return !!(TRAINUAL_CONFIG.PASSWORD && TRAINUAL_CONFIG.PASSWORD !== 'undefined' && TRAINUAL_CONFIG.PASSWORD.length > 0);
+  const hasProxy = _proxy && _proxy !== 'undefined' && _proxy.length > 0;
+  const hasPassword = _pw && _pw !== 'undefined' && _pw.length > 0;
+  // Works if we have a proxy URL (production) OR locally with the dev server
+  return !!(hasProxy || hasPassword);
 }

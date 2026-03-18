@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: trainual-proxy
+    runtime: node
+    buildCommand: npm install && npx tsc --version
+    startCommand: npx tsx server.ts
+    envVars:
+      - key: TRAINUAL_PASSWORD
+        sync: false
+      - key: NODE_ENV
+        value: production
