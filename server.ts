@@ -3,10 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Buffer } from "buffer";
 
-dotenv.config();
+dotenv.config({ path: '.env.local' });
+dotenv.config(); // also load .env if present
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = Number(process.env.PORT) || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -47,7 +48,9 @@ async function trainualFetch(endpoint: string, method: string = 'GET', payload?:
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt + 1) * 1000));
         continue;
       }
-      console.error(`Trainual API Error: ${response.status} ${response.statusText}`);
+      console.error(`Trainual API Error: ${response.status} ${response.statusText} for ${url}`);
+      const errBody = await response.text().catch(() => '');
+      console.error(`Response body: ${errBody.slice(0, 500)}`);
       return null;
     } catch (e) {
       await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
@@ -55,6 +58,15 @@ async function trainualFetch(endpoint: string, method: string = 'GET', payload?:
   }
   return null;
 }
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({
+    status: 'ok',
+    passwordConfigured: !!EXPORT_CONFIG.PASSWORD,
+    passwordLength: EXPORT_CONFIG.PASSWORD.length
+  });
+});
 
 // API Routes
 app.get("/api/trainual/users", async (req, res) => {
