@@ -32,11 +32,11 @@ export const ExamList: React.FC<ExamListProps> = ({ onSelectExam }) => {
 
   const getRoleBadgeClasses = (role: Role) => {
     switch(role) {
-      case Role.BARTENDER: return 'bg-amber-50 text-amber-700 ring-amber-200/60';
-      case Role.SERVER: return 'bg-sky-50 text-sky-700 ring-sky-200/60';
-      case Role.HOST: return 'bg-rose-50 text-rose-700 ring-rose-200/60';
-      case Role.SUPPLEMENTAL: return 'bg-emerald-50 text-emerald-700 ring-emerald-200/60';
-      default: return 'bg-gray-50 text-gray-700 ring-gray-200/60';
+      case Role.BARTENDER: return 'bg-amber-500/10 text-amber-700 ring-amber-500/20';
+      case Role.SERVER:    return 'bg-blue-500/10 text-blue-700 ring-blue-500/20';
+      case Role.HOST:      return 'bg-violet-500/10 text-violet-700 ring-violet-500/20';
+      case Role.SUPPLEMENTAL: return 'bg-emerald-500/10 text-emerald-700 ring-emerald-500/20';
+      default: return 'bg-muted text-muted-foreground ring-border/60';
     }
   };
 

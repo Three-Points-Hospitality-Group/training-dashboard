@@ -1,8 +1,8 @@
 import React from 'react';
-import { Users, ClipboardCheck, Settings, Zap, ChevronRight } from 'lucide-react';
+import { Users, ClipboardCheck, Settings, Zap, ChevronRight, BookOpenCheck } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-export type AppPage = 'staff' | 'grade' | 'settings';
+export type AppPage = 'staff' | 'assign' | 'grade' | 'settings';
 
 interface NavItem {
   id: AppPage;
@@ -15,10 +15,17 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   {
     id: 'staff',
-    label: 'Staff',
+    label: 'Manage Staff',
     icon: <Users className="w-4 h-4" />,
-    section: 'Manage',
-    description: 'Assign tests & view progress',
+    section: 'Staff',
+    description: 'Filter by role & location, view profiles',
+  },
+  {
+    id: 'assign',
+    label: 'Test Assigner',
+    icon: <BookOpenCheck className="w-4 h-4" />,
+    section: 'Staff',
+    description: 'Assign & manage curriculum',
   },
   {
     id: 'grade',

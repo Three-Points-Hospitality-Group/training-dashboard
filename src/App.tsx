@@ -15,8 +15,13 @@ const App: React.FC = () => {
       <Sidebar currentPage={currentPage} onNavigate={(page) => { setCurrentPage(page); setSelectedExam(null); }} />
 
       <main className="flex-1 overflow-hidden flex flex-col">
-        {currentPage === 'staff' && <TestAssigner />}
+        {/* Manage Staff — filter/browse employees, open user profile */}
+        {currentPage === 'staff' && <TestAssigner mode="directory" />}
 
+        {/* Test Assigner — assign/unassign curricula */}
+        {currentPage === 'assign' && <TestAssigner mode="assign" />}
+
+        {/* Grade Exam */}
         {currentPage === 'grade' && (
           <div className="flex-1 overflow-y-auto">
             {selectedExam ? (

@@ -133,7 +133,7 @@ function relevantRolesForUser(userTitle: string): Subject['role'][] {
 
 // ─── Main Component ────────────────────────────────────────────────────────────
 
-export default function TestAssigner() {
+export default function TestAssigner({ mode = 'assign' }: { mode?: 'directory' | 'assign' }) {
   const [users, setUsers] = useState<User[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
@@ -288,7 +288,7 @@ export default function TestAssigner() {
         {/* Header */}
         <div className="p-4 border-b border-border/60">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-bold text-foreground">Test Assigner</h2>
+            <h2 className="font-bold text-foreground">{mode === 'directory' ? 'Manage Staff' : 'Test Assigner'}</h2>
             <button
               onClick={loadData}
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
@@ -420,7 +420,9 @@ export default function TestAssigner() {
             </div>
             <h3 className="text-lg font-semibold text-foreground mb-1">Select an Employee</h3>
             <p className="text-sm text-muted-foreground max-w-xs">
-              Choose an employee from the left panel to view their profile and manage test assignments.
+              {mode === 'directory'
+                ? 'Choose an employee from the left to view their profile, completion stats, and assigned subjects.'
+                : 'Choose an employee from the left panel to view their profile and manage test assignments.'}
             </p>
           </div>
         ) : (
@@ -430,6 +432,7 @@ export default function TestAssigner() {
             allSubjects={subjects}
             onToggle={toggle}
             onBack={() => setSelectedUserId(null)}
+            readOnly={mode === 'directory'}
           />
         )}
       </div>
@@ -459,9 +462,10 @@ interface UserProfileProps {
   allSubjects: Subject[];
   onToggle: (userId: number, subjectId: number, isAssigned: boolean) => void;
   onBack: () => void;
+  readOnly?: boolean;
 }
 
-function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: UserProfileProps) {
+function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack, readOnly = false }: UserProfileProps) {
   const [activeTab, setActiveTab] = useState<'relevant' | 'all'>('relevant');
   const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
 
@@ -636,7 +640,8 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
                               : 'bg-card border-border/60 hover:border-border',
                           )}
                         >
-                          {/* Toggle */}
+                          {/* Toggle (assign mode only) */}
+                          {!readOnly && (
                           <button
                             disabled={isPending}
                             onClick={() => handleToggle(subject.id, isAssigned)}
@@ -651,6 +656,7 @@ function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: 
                               isAssigned && 'translate-x-5'
                             )} />
                           </button>
+                          )}
 
                           {/* Info */}
                           <div className="flex-1 min-w-0">
