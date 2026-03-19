@@ -1,7 +1,18 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Users, BookOpen, RefreshCw, Search, ChevronDown, ChevronRight, CheckSquare, Square, AlertTriangle, X } from 'lucide-react';
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+import * as ProgressPrimitive from '@radix-ui/react-progress';
+import {
+  Users, BookOpen, RefreshCw, Search, ChevronRight,
+  AlertTriangle, X, MapPin, Award, Mail, Hash,
+  CheckCircle2, Circle, ArrowLeft
+} from 'lucide-react';
 import { cn } from '../lib/utils';
-import { fetchUsers, fetchSubjects, fetchSubjectTests, assignCurriculums, unassignCurriculums, isTrainualConfigured } from '../services/trainualService';
+import {
+  fetchUsers, fetchSubjects, fetchSubjectTests,
+  assignCurriculums, unassignCurriculums, isTrainualConfigured
+} from '../services/trainualService';
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface User {
   id: number;
@@ -17,30 +28,116 @@ interface Subject {
   title: string;
   testCount: number;
   tests: { id: number; name: string }[];
-  category?: string; // Auto-detected category (e.g., "Cantina Server", "OAK Bartender")
+  category: string;
+  location: 'Cantina' | 'OAK' | 'Both' | 'General';
+  role: 'Host' | 'Server' | 'Bartender' | 'General';
 }
 
-type FilterCategory = {
-  id: string;
-  label: string;
-  count: number;
-};
+type RoleFilter = 'All' | 'Host' | 'Server' | 'Bartender';
+
+// ─── Tiny shadcn-style primitives (no extra deps beyond what's installed) ─────
+
+const Card = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('bg-card text-card-foreground rounded-xl border border-border/60 shadow-sm', className)} {...props} />
+);
+const CardHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex flex-col space-y-1.5 p-5', className)} {...props} />
+);
+const CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('font-semibold leading-none tracking-tight', className)} {...props} />
+);
+const CardDescription = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('text-sm text-muted-foreground', className)} {...props} />
+);
+const CardContent = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('p-5 pt-0', className)} {...props} />
+);
+
+const Badge = ({ className, variant = 'default', ...props }: React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'secondary' | 'outline' | 'success' | 'warning' }) => (
+  <div className={cn(
+    'inline-flex items-center rounded-md px-2 py-0.5 text-xs font-semibold border transition-colors',
+    variant === 'default' && 'bg-primary/10 text-primary border-primary/20',
+    variant === 'secondary' && 'bg-secondary/10 text-secondary-foreground border-secondary/20',
+    variant === 'outline' && 'bg-transparent text-foreground border-border',
+    variant === 'success' && 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
+    variant === 'warning' && 'bg-amber-500/10 text-amber-700 border-amber-500/20',
+    className
+  )} {...props} />
+);
+
+const Progress = ({ value = 0, className }: { value?: number; className?: string }) => (
+  <ProgressPrimitive.Root className={cn('relative h-2 w-full overflow-hidden rounded-full bg-primary/15', className)}>
+    <ProgressPrimitive.Indicator
+      className="h-full w-full flex-1 bg-primary transition-all duration-500"
+      style={{ transform: `translateX(-${100 - value}%)` }}
+    />
+  </ProgressPrimitive.Root>
+);
+
+const Separator = ({ className }: { className?: string }) => (
+  <div className={cn('shrink-0 bg-border/60 h-[1px] w-full', className)} />
+);
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function getInitials(name: string) {
+  if (!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  return parts.length === 1
+    ? parts[0][0].toUpperCase()
+    : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function detectCategory(title: string): Pick<Subject, 'category' | 'location' | 'role'> {
+  const t = title.toLowerCase();
+  const location: Subject['location'] = t.includes('cantina') ? 'Cantina' : t.includes('oak') ? 'OAK' : 'General';
+  let role: Subject['role'] = 'General';
+  if (t.includes('server') || t.includes('service')) role = 'Server';
+  else if (t.includes('bartender') || t.includes('bar')) role = 'Bartender';
+  else if (t.includes('host')) role = 'Host';
+
+  let category = 'General';
+  if (location !== 'General' && role !== 'General') category = `${location} ${role}`;
+  else if (location !== 'General') category = `${location} General`;
+  else if (t.includes('beer') || t.includes('wine')) { category = 'Beer & Wine'; }
+  else if (t.includes('handbook') || t.includes('employee')) category = 'Company Policies';
+  else if (t.includes('white buffalo') || t.includes('wb')) category = 'White Buffalo';
+
+  return { category, location, role };
+}
+
+function getRoleColor(role: string) {
+  if (role === 'Host') return 'bg-violet-500/10 text-violet-700 border-violet-500/20';
+  if (role === 'Server') return 'bg-blue-500/10 text-blue-700 border-blue-500/20';
+  if (role === 'Bartender') return 'bg-amber-500/10 text-amber-700 border-amber-500/20';
+  return 'bg-muted text-muted-foreground border-border/60';
+}
+
+function getLocationAccent(location: string) {
+  if (location === 'Cantina') return 'border-l-teal-400';
+  if (location === 'OAK') return 'border-l-orange-400';
+  return 'border-l-border';
+}
+
+// Maps a user's role title → which Subject roles are relevant
+function relevantRolesForUser(userRoles: string[]): Subject['role'][] {
+  const joined = userRoles.join(' ').toLowerCase();
+  const result = new Set<Subject['role']>(['General']);
+  if (joined.includes('server') || joined.includes('service')) result.add('Server');
+  if (joined.includes('bartender') || joined.includes('bar')) result.add('Bartender');
+  if (joined.includes('host')) result.add('Host');
+  return Array.from(result);
+}
+
+// ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function TestAssigner() {
   const [users, setUsers] = useState<User[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
-  const [mode, setMode] = useState<'user' | 'subject'>('user');
-  
-  // Simplified filters
   const [search, setSearch] = useState('');
-  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
-
-  // Expanded states
-  const [expandedUsers, setExpandedUsers] = useState<Set<number>>(new Set());
-  const [expandedSubjects, setExpandedSubjects] = useState<Set<number>>(new Set());
-
-  // Toast state
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>('All');
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
@@ -50,73 +147,45 @@ export default function TestAssigner() {
 
   const loadData = async () => {
     if (!isTrainualConfigured()) {
-      showToast('Trainual password not configured. Add TRAINUAL_PASSWORD to your .env file.', 'error');
+      showToast('Trainual password not configured.', 'error');
       setLoading(false);
       return;
     }
     setLoading(true);
     try {
-      const [usersData, subjectsData] = await Promise.all([
-        fetchUsers(),
-        fetchSubjects()
-      ]);
+      const [usersData, subjectsData] = await Promise.all([fetchUsers(), fetchSubjects()]);
 
-      // Process subjects and auto-detect categories
       const testSubjects: Subject[] = [];
       for (const s of subjectsData) {
         if ((s.surveys_count || 0) > 0) {
           const testsData = await fetchSubjectTests(s.id);
           const title = s.title || 'Untitled';
-          
-          // Auto-detect category from title
-          let category = 'Other';
-          const titleLower = title.toLowerCase();
-          
-          // Location + Role combinations
-          if (titleLower.includes('cantina')) {
-            if (titleLower.includes('server') || titleLower.includes('service')) category = 'Cantina Server';
-            else if (titleLower.includes('bartender') || titleLower.includes('bar')) category = 'Cantina Bartender';
-            else if (titleLower.includes('host')) category = 'Cantina Host';
-            else category = 'Cantina General';
-          } else if (titleLower.includes('oak')) {
-            if (titleLower.includes('server') || titleLower.includes('service')) category = 'OAK Server';
-            else if (titleLower.includes('bartender') || titleLower.includes('bar')) category = 'OAK Bartender';
-            else if (titleLower.includes('host')) category = 'OAK Host';
-            else category = 'OAK General';
-          } else if (titleLower.includes('white buffalo') || titleLower.includes('wb')) {
-            category = 'White Buffalo';
-          } else if (titleLower.includes('beer') || titleLower.includes('wine')) {
-            category = 'Beer & Wine Knowledge';
-          } else if (titleLower.includes('handbook') || titleLower.includes('employee')) {
-            category = 'Company Policies';
-          }
-          
+          const { category, location, role } = detectCategory(title);
           testSubjects.push({
             id: s.id,
             title,
             testCount: s.surveys_count || 0,
             tests: Array.isArray(testsData) ? testsData.map((t: any) => ({ id: t.id, name: t.name || 'Unnamed Test' })) : [],
-            category
+            category,
+            location,
+            role,
           });
         }
       }
       testSubjects.sort((a, b) => a.title.localeCompare(b.title));
 
-      // Process users
       const userData: User[] = [];
       usersData.forEach((u: any) => {
         if (u.status === 'archived') return;
         const assignedSubjectIds: Record<number, boolean> = {};
-        (u.curriculums_assigned || []).forEach((c: any) => {
-          assignedSubjectIds[c.id] = true;
-        });
+        (u.curriculums_assigned || []).forEach((c: any) => { assignedSubjectIds[c.id] = true; });
         userData.push({
           id: u.id,
           name: u.name || '',
           email: u.email || '',
           status: u.status || '',
           roles: (u.roles_assigned || []).map((r: any) => r.name),
-          assignedSubjectIds
+          assignedSubjectIds,
         });
       });
       userData.sort((a, b) => a.name.localeCompare(b.name));
@@ -124,516 +193,504 @@ export default function TestAssigner() {
       setUsers(userData);
       setSubjects(testSubjects);
     } catch (error: any) {
-      showToast(`Failed to load data: ${error.message}`, 'error');
+      showToast(`Failed to load: ${error.message}`, 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  useEffect(() => { loadData(); }, []);
 
-  // Auto-detect available categories from subjects
-  const availableCategories = useMemo((): FilterCategory[] => {
-    const categoryMap = new Map<string, number>();
-    subjects.forEach(s => {
-      const cat = s.category || 'Other';
-      categoryMap.set(cat, (categoryMap.get(cat) || 0) + 1);
-    });
-    return Array.from(categoryMap.entries())
-      .map(([id, count]) => ({ id, label: id, count }))
-      .sort((a, b) => a.label.localeCompare(b.label));
-  }, [subjects]);
+  const filteredUsers = useMemo(() => users.filter(u => {
+    if (search) {
+      const h = `${u.name} ${u.email} ${u.roles.join(' ')}`.toLowerCase();
+      if (!h.includes(search.toLowerCase())) return false;
+    }
+    if (roleFilter !== 'All') {
+      const hasRole = u.roles.some(r => r.toLowerCase().includes(roleFilter.toLowerCase()));
+      if (!hasRole) return false;
+    }
+    return true;
+  }), [users, search, roleFilter]);
 
-  const filteredUsers = useMemo(() => {
-    return users.filter(u => {
-      if (search) {
-        const h = `${u.name} ${u.email} ${u.roles.join(' ')}`.toLowerCase();
-        if (!h.includes(search.toLowerCase())) return false;
-      }
-      return true;
-    });
-  }, [users, search]);
+  const selectedUser = useMemo(() => users.find(u => u.id === selectedUserId) ?? null, [users, selectedUserId]);
 
-  const filteredSubjects = useMemo(() => {
-    return subjects.filter(s => {
-      if (search && !s.title.toLowerCase().includes(search.toLowerCase())) return false;
-      if (selectedCategories.size > 0 && !selectedCategories.has(s.category || 'Other')) return false;
-      return true;
-    });
-  }, [subjects, search, selectedCategories]);
+  // Subjects relevant to the selected user based on their role
+  const userRelevantSubjects = useMemo(() => {
+    if (!selectedUser) return subjects;
+    const relevant = relevantRolesForUser(selectedUser.roles);
+    return subjects.filter(s => relevant.includes(s.role));
+  }, [selectedUser, subjects]);
 
   const stats = useMemo(() => {
-    const withAssignments = users.filter(u => Object.keys(u.assignedSubjectIds).length > 0).length;
-    return {
-      totalUsers: users.length,
-      totalSubjects: subjects.length,
-      assigned: withAssignments,
-      unassigned: users.length - withAssignments
-    };
-  }, [users, subjects]);
+    const roleCounts = { Host: 0, Server: 0, Bartender: 0, Other: 0 };
+    users.forEach(u => {
+      const r = u.roles.join(' ').toLowerCase();
+      if (r.includes('host')) roleCounts.Host++;
+      else if (r.includes('server')) roleCounts.Server++;
+      else if (r.includes('bartender') || r.includes('bar')) roleCounts.Bartender++;
+      else roleCounts.Other++;
+    });
+    return roleCounts;
+  }, [users]);
 
-  const clearFilters = () => {
-    setSearch('');
-    setSelectedCategories(new Set());
-  };
-
-  const toggleCategory = (categoryId: string) => {
-    const newSet = new Set(selectedCategories);
-    if (newSet.has(categoryId)) {
-      newSet.delete(categoryId);
+  const toggle = async (userId: number, subjectId: number, isAssigned: boolean) => {
+    if (isAssigned) {
+      const result = await unassignCurriculums(userId, [subjectId]);
+      if (result !== null) {
+        setUsers(prev => prev.map(u => {
+          if (u.id !== userId) return u;
+          const n = { ...u.assignedSubjectIds };
+          delete n[subjectId];
+          return { ...u, assignedSubjectIds: n };
+        }));
+        showToast('Subject unassigned', 'info');
+      } else showToast('Failed to unassign', 'error');
     } else {
-      newSet.add(categoryId);
-    }
-    setSelectedCategories(newSet);
-  };
-
-  const toggleUserCard = (id: number) => {
-    const newSet = new Set(expandedUsers);
-    if (newSet.has(id)) newSet.delete(id);
-    else newSet.add(id);
-    setExpandedUsers(newSet);
-  };
-
-  const toggleSubjectCard = (id: number) => {
-    const newSet = new Set(expandedSubjects);
-    if (newSet.has(id)) newSet.delete(id);
-    else newSet.add(id);
-    setExpandedSubjects(newSet);
-  };
-
-  const assignToUser = async (userId: number, subjectIds: number[]) => {
-    try {
-      const result = await assignCurriculums(userId, subjectIds);
+      const result = await assignCurriculums(userId, [subjectId]);
       if (result !== null) {
         setUsers(prev => prev.map(u => {
-          if (u.id === userId) {
-            const newAssigned = { ...u.assignedSubjectIds };
-            subjectIds.forEach(id => newAssigned[id] = true);
-            return { ...u, assignedSubjectIds: newAssigned };
-          }
-          return u;
+          if (u.id !== userId) return u;
+          return { ...u, assignedSubjectIds: { ...u.assignedSubjectIds, [subjectId]: true } };
         }));
-        showToast(`Assigned ${subjectIds.length} subject(s)`, 'success');
-        return true;
-      }
-      throw new Error('Failed to assign');
-    } catch (e: any) {
-      showToast(e.message, 'error');
-      return false;
+        showToast('Subject assigned ✓', 'success');
+      } else showToast('Failed to assign', 'error');
     }
   };
 
-  const unassignFromUser = async (userId: number, subjectIds: number[]) => {
-    try {
-      const result = await unassignCurriculums(userId, subjectIds);
-      if (result !== null) {
-        setUsers(prev => prev.map(u => {
-          if (u.id === userId) {
-            const newAssigned = { ...u.assignedSubjectIds };
-            subjectIds.forEach(id => delete newAssigned[id]);
-            return { ...u, assignedSubjectIds: newAssigned };
-          }
-          return u;
-        }));
-        showToast(`Unassigned ${subjectIds.length} subject(s)`, 'success');
-        return true;
-      }
-      throw new Error('Failed to unassign');
-    } catch (e: any) {
-      showToast(e.message, 'error');
-      return false;
-    }
-  };
+  // ─── Render ────────────────────────────────────────────────────────────────
 
-  const getInitials = (name: string) => {
-    if (!name) return '?';
-    const parts = name.trim().split(/\s+/);
-    return parts.length === 1 ? parts[0][0].toUpperCase() : (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-  };
+  if (!isTrainualConfigured() && !loading) {
+    return (
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center bg-background p-8">
+        <Card className="max-w-md w-full">
+          <CardContent className="pt-6 text-center">
+            <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
+            <h3 className="text-lg font-bold mb-2">Trainual Not Connected</h3>
+            <p className="text-sm text-muted-foreground">
+              Add <code className="px-1 py-0.5 bg-muted rounded text-xs font-mono">TRAINUAL_PASSWORD</code> to your <code className="px-1 py-0.5 bg-muted rounded text-xs font-mono">.env</code> file and rebuild.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-background overflow-hidden">
-      {/* Sidebar */}
-      <div className="w-64 border-r border-border/60 bg-card/50 backdrop-blur-sm flex flex-col overflow-y-auto">
-        <div className="p-6 border-b border-border/60">
-          <h2 className="text-lg font-bold text-foreground">Test Assignments</h2>
-          <p className="text-xs text-muted-foreground mt-1">Three Points Hospitality</p>
-        </div>
-        
-        <div className="p-4 flex-1">
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Search</h3>
-            
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search subjects or users..."
-                className="w-full pl-9 pr-3 py-2 bg-background border border-border/60 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-              />
-            </div>
+
+      {/* ── Left Panel: Employee List ──────────────────────────────────────── */}
+      <div className="w-72 border-r border-border/60 bg-card/40 flex flex-col shrink-0">
+
+        {/* Header */}
+        <div className="p-4 border-b border-border/60">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-bold text-foreground">Test Assigner</h2>
+            <button
+              onClick={loadData}
+              className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+              title="Refresh"
+            >
+              <RefreshCw className={cn('w-4 h-4', loading && 'animate-spin')} />
+            </button>
           </div>
 
-          <div className="mb-6">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">View Mode</h3>
-            <div className="space-y-1">
-              <button
-                onClick={() => setMode('user')}
-                className={cn(
-                  "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                  mode === 'user' ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  By Employee
-                </div>
-                <span className={cn("text-[10px] px-2 py-0.5 rounded-full", mode === 'user' ? "bg-primary/20" : "bg-muted")}>
-                  {users.length}
-                </span>
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search employees..."
+              className="w-full pl-8 pr-3 py-2 bg-background border border-border/60 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+            />
+            {search && (
+              <button onClick={() => setSearch('')} className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground">
+                <X className="w-3.5 h-3.5" />
               </button>
-              <button
-                onClick={() => setMode('subject')}
-                className={cn(
-                  "w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                  mode === 'subject' ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-accent hover:text-foreground"
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
-                  By Subject
-                </div>
-                <span className={cn("text-[10px] px-2 py-0.5 rounded-full", mode === 'subject' ? "bg-primary/20" : "bg-muted")}>
-                  {subjects.length}
-                </span>
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Actions</h3>
-            <div className="space-y-2">
-              <button
-                onClick={loadData}
-                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/60"
-              >
-                <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-                Refresh Data
-              </button>
-              {(search || selectedCategories.size > 0) && (
-                <button
-                  onClick={clearFilters}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/60"
-                >
-                  <X className="w-4 h-4" />
-                  Clear Filters
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden relative">
-        {loading && (
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center">
-            <RefreshCw className="w-8 h-8 text-primary animate-spin mb-4" />
-            <p className="text-sm font-medium text-muted-foreground">Loading Trainual data...</p>
-          </div>
-        )}
-
-        {!isTrainualConfigured() && !loading && (
-          <div className="absolute inset-0 bg-background/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-8">
-            <div className="max-w-md text-center">
-              <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-foreground mb-2">Trainual Not Connected</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Add your <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">TRAINUAL_PASSWORD</code> to the <code className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">.env</code> file and rebuild to enable the Test Assigner.
-              </p>
-              <div className="bg-muted/50 border border-border/60 rounded-lg p-4 text-left text-xs font-mono text-muted-foreground">
-                <div>TRAINUAL_PASSWORD=your_password_here</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="p-8 border-b border-border/60 bg-card/30">
-          <div className="mx-auto mb-12 max-w-3xl text-center">
-            <span className="clerk-inspired-badge bg-primary/10 text-primary border-primary/20 backdrop-blur-sm mb-6 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium">
-              <Users className="h-4 w-4 mr-2" />
-              Test Assigner
-            </span>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              {mode === 'user' ? 'Manage Employees' : 'Manage Test Subjects'}
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              {mode === 'user' ? 'Manage test subject assignments per employee' : 'Assign a subject to multiple employees at once'}
-            </p>
-          </div>
-
-          {/* Category Filter Chips - Only show in Subject mode */}
-          {mode === 'subject' && availableCategories.length > 0 && (
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="w-4 h-4 text-muted-foreground" />
-                <h3 className="text-sm font-semibold text-foreground">Filter by Category</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {availableCategories.map(cat => {
-                  const isActive = selectedCategories.has(cat.id);
-                  return (
-                    <button
-                      key={cat.id}
-                      onClick={() => toggleCategory(cat.id)}
-                      className={cn(
-                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all border",
-                        isActive
-                          ? "bg-primary/10 text-primary border-primary/30 shadow-sm"
-                          : "bg-background/50 text-muted-foreground border-border/60 hover:bg-accent hover:text-foreground"
-                      )}
-                    >
-                      {cat.label}
-                      <span className={cn(
-                        "text-[10px] px-1.5 py-0.5 rounded-full font-semibold",
-                        isActive ? "bg-primary/20" : "bg-muted"
-                      )}>
-                        {cat.count}
-                      </span>
-                      {isActive && <X className="w-3 h-3" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div className="grid grid-cols-4 gap-4">
-            <div className="enterprise-metric-card p-4 rounded-xl">
-              <div className="text-3xl font-bold text-foreground">{stats.totalUsers}</div>
-              <div className="text-xs font-medium text-muted-foreground mt-1">Total Employees</div>
-            </div>
-            <div className="enterprise-metric-card p-4 rounded-xl">
-              <div className="text-3xl font-bold text-foreground">{stats.totalSubjects}</div>
-              <div className="text-xs font-medium text-muted-foreground mt-1">Test Subjects</div>
-            </div>
-            <div className="enterprise-metric-card p-4 rounded-xl">
-              <div className="text-3xl font-bold text-foreground">{stats.assigned}</div>
-              <div className="text-xs font-medium text-muted-foreground mt-1">With Assignments</div>
-            </div>
-            <div className="enterprise-metric-card p-4 rounded-xl">
-              <div className="text-3xl font-bold text-foreground">{stats.unassigned}</div>
-              <div className="text-xs font-medium text-muted-foreground mt-1">No Assignments</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-foreground">
-              {mode === 'user' ? 'Employees' : 'Test Subjects'}
-            </h2>
-            <span className="text-sm text-muted-foreground">
-              {mode === 'user' ? `${filteredUsers.length} employees` : `${filteredSubjects.length} subjects`}
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            {mode === 'user' ? (
-              filteredUsers.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">No employees match your filters.</div>
-              ) : (
-                filteredUsers.map(user => {
-                  const isExpanded = expandedUsers.has(user.id);
-                  const assignedCount = Object.keys(user.assignedSubjectIds).length;
-                  
-                  return (
-                    <div key={user.id} className="enterprise-card rounded-xl overflow-hidden transition-all duration-200">
-                      <div 
-                        className="p-4 flex items-center justify-between cursor-pointer hover:bg-accent/30"
-                        onClick={() => toggleUserCard(user.id)}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm border border-primary/20">
-                            {getInitials(user.name)}
-                          </div>
-                          <div>
-                            <div className="font-semibold text-foreground">{user.name}</div>
-                            <div className="text-xs text-muted-foreground">{user.email}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          {user.roles.length > 0 && (
-                            <span className="px-2.5 py-1 rounded-md bg-secondary/10 text-secondary-foreground text-xs font-medium border border-secondary/20">
-                              {user.roles[0]}
-                            </span>
-                          )}
-                          <span className="text-xs text-muted-foreground">{assignedCount} assigned</span>
-                          <ChevronRight className={cn("w-5 h-5 text-muted-foreground transition-transform", isExpanded && "rotate-90")} />
-                        </div>
-                      </div>
-
-                      {isExpanded && (
-                        <div className="p-4 border-t border-border/60 bg-background/50">
-                          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
-                            Test Subjects ({subjects.length} available)
-                          </div>
-                          <div className="space-y-2">
-                            {subjects.map(subject => {
-                              const isAssigned = !!user.assignedSubjectIds[subject.id];
-                              return (
-                                <div key={subject.id} className="flex items-center gap-4 p-3 rounded-lg bg-card border border-border/60 hover:border-primary/30 transition-colors">
-                                  <button
-                                    onClick={() => isAssigned ? unassignFromUser(user.id, [subject.id]) : assignToUser(user.id, [subject.id])}
-                                    className={cn(
-                                      "w-10 h-5 rounded-full relative transition-colors border-none outline-none",
-                                      isAssigned ? "bg-primary" : "bg-muted"
-                                    )}
-                                  >
-                                    <div className={cn(
-                                      "absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform",
-                                      isAssigned && "translate-x-5"
-                                    )} />
-                                  </button>
-                                  <div>
-                                    <div className="text-sm font-medium text-foreground">{subject.title}</div>
-                                    <div className="text-xs text-muted-foreground mt-0.5">
-                                      {subject.tests.map(t => t.name).join(', ') || 'No tests listed'}
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          
-                          <div className="flex gap-3 mt-6">
-                            <button
-                              onClick={() => {
-                                const unassigned = subjects.filter(s => !user.assignedSubjectIds[s.id]).map(s => s.id);
-                                if (unassigned.length) assignToUser(user.id, unassigned);
-                              }}
-                              className="px-4 py-2 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-lg text-sm font-medium hover:bg-emerald-500/20 transition-colors"
-                            >
-                              Assign All ({subjects.length - assignedCount} unassigned)
-                            </button>
-                            <button
-                              onClick={() => {
-                                const assigned = Object.keys(user.assignedSubjectIds).map(Number);
-                                if (assigned.length && confirm(`Unassign all ${assigned.length} subjects from ${user.name}?`)) {
-                                  unassignFromUser(user.id, assigned);
-                                }
-                              }}
-                              className="px-4 py-2 bg-rose-500/10 text-rose-600 border border-rose-500/20 rounded-lg text-sm font-medium hover:bg-rose-500/20 transition-colors"
-                            >
-                              Unassign All ({assignedCount} assigned)
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )
-            ) : (
-              filteredSubjects.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">No subjects match your filters.</div>
-              ) : (
-                filteredSubjects.map(subject => {
-                  const isExpanded = expandedSubjects.has(subject.id);
-                  const assignedUsers = users.filter(u => u.assignedSubjectIds[subject.id]);
-                  
-                  return (
-                    <div key={subject.id} className="enterprise-card rounded-xl overflow-hidden transition-all duration-200">
-                      <div 
-                        className="p-4 flex items-center justify-between cursor-pointer hover:bg-accent/30"
-                        onClick={() => toggleSubjectCard(subject.id)}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className={cn(
-                            "w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center border border-primary/20",
-                            /cantina/i.test(subject.title) ? "border-l-4 border-l-teal-400" :
-                            /oak/i.test(subject.title) ? "border-l-4 border-l-orange-400" : "border-l-4 border-l-gray-800"
-                          )}>
-                            <BookOpen className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <div className="font-semibold text-foreground">{subject.title}</div>
-                            <div className="text-xs text-muted-foreground">{subject.testCount} tests • ID {subject.id}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span className="px-2.5 py-1 rounded-md bg-secondary/10 text-secondary-foreground text-xs font-medium border border-secondary/20">
-                            {assignedUsers.length} / {users.length} assigned
-                          </span>
-                          <ChevronRight className={cn("w-5 h-5 text-muted-foreground transition-transform", isExpanded && "rotate-90")} />
-                        </div>
-                      </div>
-
-                      {isExpanded && (
-                        <div className="p-4 border-t border-border/60 bg-background/50">
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mt-4">
-                            {users.map(user => {
-                              const isAssigned = !!user.assignedSubjectIds[subject.id];
-                              return (
-                                <div key={user.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-card border border-border/60 hover:border-primary/30 transition-colors">
-                                  <button
-                                    onClick={() => isAssigned ? unassignFromUser(user.id, [subject.id]) : assignToUser(user.id, [subject.id])}
-                                    className="text-primary focus:outline-none"
-                                  >
-                                    {isAssigned ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5 text-muted-foreground" />}
-                                  </button>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="text-sm font-medium text-foreground truncate">{user.name}</div>
-                                    {user.roles.length > 0 && (
-                                      <div className="text-[10px] text-muted-foreground truncate">{user.roles[0]}</div>
-                                    )}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          
-                          <div className="flex gap-3 mt-6">
-                            <button
-                              onClick={() => {
-                                const unassigned = users.filter(u => !u.assignedSubjectIds[subject.id]).map(u => u.id);
-                                if (unassigned.length && confirm(`Assign this subject to all ${unassigned.length} unassigned employees?`)) {
-                                  Promise.all(unassigned.map(uid => assignToUser(uid, [subject.id])));
-                                }
-                              }}
-                              className="px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-lg text-sm font-medium hover:bg-primary/20 transition-colors"
-                            >
-                              Assign to All Employees
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })
-              )
             )}
           </div>
         </div>
+
+        {/* Role Filter Tabs */}
+        <div className="px-3 pt-3 pb-2 border-b border-border/60">
+          <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">Filter by Role</p>
+          <div className="grid grid-cols-4 gap-1">
+            {(['All', 'Host', 'Server', 'Bartender'] as RoleFilter[]).map(r => (
+              <button
+                key={r}
+                onClick={() => setRoleFilter(r)}
+                className={cn(
+                  'py-1 rounded-md text-xs font-medium transition-all border',
+                  roleFilter === r
+                    ? r === 'All' ? 'bg-foreground text-background border-foreground'
+                      : r === 'Host' ? 'bg-violet-500 text-white border-violet-500'
+                      : r === 'Server' ? 'bg-blue-500 text-white border-blue-500'
+                      : 'bg-amber-500 text-white border-amber-500'
+                    : 'bg-background text-muted-foreground border-border/60 hover:bg-accent hover:text-foreground'
+                )}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+          {/* Role stat pills */}
+          <div className="flex gap-1.5 mt-2 flex-wrap">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-700 font-medium">{stats.Host} Host</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-700 font-medium">{stats.Server} Server</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-700 font-medium">{stats.Bartender} Bartender</span>
+          </div>
+        </div>
+
+        {/* Employee List */}
+        <div className="flex-1 overflow-y-auto">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center h-full gap-3 text-muted-foreground">
+              <RefreshCw className="w-5 h-5 animate-spin" />
+              <span className="text-xs">Loading...</span>
+            </div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="p-6 text-center text-sm text-muted-foreground">No employees found</div>
+          ) : (
+            <div className="p-2 space-y-0.5">
+              {filteredUsers.map(user => {
+                const assigned = Object.keys(user.assignedSubjectIds).length;
+                const relevant = relevantRolesForUser(user.roles);
+                const relevantTotal = subjects.filter(s => relevant.includes(s.role)).length;
+                const pct = relevantTotal > 0 ? Math.round((assigned / relevantTotal) * 100) : 0;
+                const isSelected = selectedUserId === user.id;
+                const primaryRole = user.roles[0] || '';
+
+                return (
+                  <button
+                    key={user.id}
+                    onClick={() => setSelectedUserId(user.id)}
+                    className={cn(
+                      'w-full text-left px-3 py-2.5 rounded-lg transition-all group',
+                      isSelected
+                        ? 'bg-primary/10 border border-primary/20'
+                        : 'hover:bg-accent border border-transparent'
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={cn(
+                        'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border',
+                        isSelected ? 'bg-primary text-primary-foreground border-primary' : 'bg-muted text-muted-foreground border-border/60'
+                      )}>
+                        {getInitials(user.name)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1">
+                          <span className={cn('text-sm font-medium truncate', isSelected ? 'text-primary' : 'text-foreground')}>
+                            {user.name}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground shrink-0">{pct}%</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          {primaryRole && (
+                            <span className={cn('text-[10px] px-1.5 py-0 rounded border font-medium', getRoleColor(
+                              primaryRole.toLowerCase().includes('host') ? 'Host'
+                              : primaryRole.toLowerCase().includes('server') ? 'Server'
+                              : primaryRole.toLowerCase().includes('bartender') ? 'Bartender' : ''
+                            ))}>
+                              {primaryRole.split(' ')[0]}
+                            </span>
+                          )}
+                          <span className="text-[10px] text-muted-foreground">{assigned} assigned</span>
+                        </div>
+                        <Progress value={pct} className="mt-1.5 h-1" />
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Right Panel: User Profile ──────────────────────────────────────── */}
+      <div className="flex-1 overflow-hidden flex flex-col">
+        {!selectedUser ? (
+          // Empty state
+          <div className="flex-1 flex flex-col items-center justify-center text-center p-12">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Users className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-1">Select an Employee</h3>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              Choose an employee from the left panel to view their profile and manage test assignments.
+            </p>
+          </div>
+        ) : (
+          <UserProfile
+            user={selectedUser}
+            relevantSubjects={userRelevantSubjects}
+            allSubjects={subjects}
+            onToggle={toggle}
+            onBack={() => setSelectedUserId(null)}
+          />
+        )}
       </div>
 
       {/* Toast */}
       {toast && (
         <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-right-8 fade-in duration-300">
           <div className={cn(
-            "px-4 py-3 rounded-xl shadow-lg border flex items-center gap-3",
-            toast.type === 'success' ? "bg-emerald-50 border-emerald-200 text-emerald-800" :
-            toast.type === 'error' ? "bg-rose-50 border-rose-200 text-rose-800" :
-            "bg-blue-50 border-blue-200 text-blue-800"
+            'px-4 py-3 rounded-xl shadow-lg border flex items-center gap-3',
+            toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-200'
+            : toast.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950 dark:border-rose-800 dark:text-rose-200'
+            : 'bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-950 dark:border-blue-800 dark:text-blue-200'
           )}>
             <span className="text-sm font-medium">{toast.message}</span>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── User Profile Panel ────────────────────────────────────────────────────────
+
+interface UserProfileProps {
+  user: User;
+  relevantSubjects: Subject[];
+  allSubjects: Subject[];
+  onToggle: (userId: number, subjectId: number, isAssigned: boolean) => void;
+  onBack: () => void;
+}
+
+function UserProfile({ user, relevantSubjects, allSubjects, onToggle, onBack }: UserProfileProps) {
+  const [activeTab, setActiveTab] = useState<'relevant' | 'all'>('relevant');
+  const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
+
+  const assignedCount = Object.keys(user.assignedSubjectIds).length;
+  const relevantAssigned = relevantSubjects.filter(s => user.assignedSubjectIds[s.id]).length;
+  const relevantPct = relevantSubjects.length > 0 ? Math.round((relevantAssigned / relevantSubjects.length) * 100) : 0;
+
+  const handleToggle = async (subjectId: number, isAssigned: boolean) => {
+    setPendingIds(p => new Set(p).add(subjectId));
+    await onToggle(user.id, subjectId, isAssigned);
+    setPendingIds(p => { const n = new Set(p); n.delete(subjectId); return n; });
+  };
+
+  const displaySubjects = activeTab === 'relevant' ? relevantSubjects : allSubjects;
+
+  // Group subjects by category for the "relevant" tab
+  const grouped = useMemo(() => {
+    const map = new Map<string, Subject[]>();
+    displaySubjects.forEach(s => {
+      const k = s.category;
+      if (!map.has(k)) map.set(k, []);
+      map.get(k)!.push(s);
+    });
+    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
+  }, [displaySubjects]);
+
+  const primaryRole = user.roles[0] || 'No Role';
+  const roleKey = primaryRole.toLowerCase().includes('host') ? 'Host'
+    : primaryRole.toLowerCase().includes('server') ? 'Server'
+    : primaryRole.toLowerCase().includes('bartender') ? 'Bartender' : '';
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+
+      {/* Profile Header */}
+      <div className="p-6 border-b border-border/60 bg-card/30 shrink-0">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-4 transition-colors">
+          <ArrowLeft className="w-3.5 h-3.5" />
+          All Employees
+        </button>
+
+        <div className="flex items-start gap-5">
+          {/* Avatar */}
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold border-2 border-primary/20 shrink-0">
+            {getInitials(user.name)}
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="text-xl font-bold text-foreground">{user.name}</h2>
+              {roleKey && (
+                <span className={cn('text-xs px-2 py-0.5 rounded-md border font-semibold', getRoleColor(roleKey))}>
+                  {primaryRole}
+                </span>
+              )}
+              <span className={cn('text-xs px-2 py-0.5 rounded-md border font-medium',
+                user.status === 'active' ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20' : 'bg-muted text-muted-foreground border-border/60'
+              )}>
+                {user.status}
+              </span>
+            </div>
+            <div className="flex items-center gap-1.5 mt-1 text-sm text-muted-foreground">
+              <Mail className="w-3.5 h-3.5" />
+              {user.email}
+            </div>
+            {user.roles.length > 1 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {user.roles.slice(1).map(r => (
+                  <span key={r} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border/60">{r}</span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Stats */}
+          <div className="flex gap-3 shrink-0">
+            <div className="text-center p-3 rounded-xl bg-card border border-border/60 min-w-[72px]">
+              <div className="text-2xl font-bold text-foreground">{relevantPct}%</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">Complete</div>
+              <Progress value={relevantPct} className="mt-2 h-1.5" />
+            </div>
+            <div className="text-center p-3 rounded-xl bg-card border border-border/60 min-w-[72px]">
+              <div className="text-2xl font-bold text-foreground">{relevantAssigned}</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">of {relevantSubjects.length}</div>
+              <div className="text-[10px] text-muted-foreground">assigned</div>
+            </div>
+            <div className="text-center p-3 rounded-xl bg-card border border-border/60 min-w-[72px]">
+              <div className="text-2xl font-bold text-foreground">{assignedCount}</div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">total</div>
+              <div className="text-[10px] text-muted-foreground">assigned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 px-6 pt-4 pb-0 border-b border-border/60 shrink-0">
+        <button
+          onClick={() => setActiveTab('relevant')}
+          className={cn(
+            'px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-all -mb-px',
+            activeTab === 'relevant'
+              ? 'border-primary text-primary bg-primary/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <BookOpen className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
+          Relevant Subjects
+          <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">
+            {relevantSubjects.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab('all')}
+          className={cn(
+            'px-4 py-2 text-sm font-medium rounded-t-lg border-b-2 transition-all -mb-px',
+            activeTab === 'all'
+              ? 'border-primary text-primary bg-primary/5'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <Hash className="w-3.5 h-3.5 inline mr-1.5 -mt-0.5" />
+          All Subjects
+          <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-semibold">
+            {allSubjects.length}
+          </span>
+        </button>
+      </div>
+
+      {/* Subject List */}
+      <div className="flex-1 overflow-y-auto p-6">
+        {grouped.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-40 text-muted-foreground gap-2">
+            <BookOpen className="w-8 h-8 opacity-30" />
+            <p className="text-sm">No subjects found</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {grouped.map(([category, subs]) => {
+              const catAssigned = subs.filter(s => user.assignedSubjectIds[s.id]).length;
+              return (
+                <div key={category}>
+                  {/* Category Header */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{category}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground font-medium">
+                        {catAssigned}/{subs.length}
+                      </span>
+                    </div>
+                    <div className="flex-1 mx-4">
+                      <Progress value={subs.length > 0 ? Math.round((catAssigned / subs.length) * 100) : 0} className="h-1" />
+                    </div>
+                  </div>
+
+                  {/* Subject Cards */}
+                  <div className="space-y-2">
+                    {subs.map(subject => {
+                      const isAssigned = !!user.assignedSubjectIds[subject.id];
+                      const isPending = pendingIds.has(subject.id);
+
+                      return (
+                        <div
+                          key={subject.id}
+                          className={cn(
+                            'flex items-center gap-4 p-3.5 rounded-xl border transition-all',
+                            'border-l-4',
+                            getLocationAccent(subject.location),
+                            isAssigned
+                              ? 'bg-primary/5 border-primary/15 border-l-primary/40'
+                              : 'bg-card border-border/60 hover:border-border',
+                          )}
+                        >
+                          {/* Toggle */}
+                          <button
+                            disabled={isPending}
+                            onClick={() => handleToggle(subject.id, isAssigned)}
+                            className={cn(
+                              'shrink-0 w-10 h-5 rounded-full relative transition-all border-none outline-none',
+                              isAssigned ? 'bg-primary' : 'bg-muted',
+                              isPending && 'opacity-50 cursor-wait'
+                            )}
+                          >
+                            <div className={cn(
+                              'absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform',
+                              isAssigned && 'translate-x-5'
+                            )} />
+                          </button>
+
+                          {/* Info */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="text-sm font-medium text-foreground">{subject.title}</span>
+                              {isAssigned && (
+                                <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-medium">
+                                  <CheckCircle2 className="w-3 h-3" /> Assigned
+                                </span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              <span className="text-xs text-muted-foreground">{subject.testCount} test{subject.testCount !== 1 ? 's' : ''}</span>
+                              {subject.tests.length > 0 && (
+                                <span className="text-xs text-muted-foreground truncate max-w-xs">
+                                  {subject.tests.map(t => t.name).join(' · ')}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Location badge */}
+                          {subject.location !== 'General' && (
+                            <span className={cn(
+                              'shrink-0 text-[10px] px-2 py-0.5 rounded border font-medium',
+                              subject.location === 'Cantina' ? 'bg-teal-500/10 text-teal-700 border-teal-500/20' : 'bg-orange-500/10 text-orange-700 border-orange-500/20'
+                            )}>
+                              {subject.location}
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
