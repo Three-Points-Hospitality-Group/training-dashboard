@@ -90,8 +90,7 @@ export const SettingsPanel: React.FC = () => {
   const hasProxy = proxyUrl && proxyUrl !== 'undefined';
   const hasTrainualPw = !!(process.env.TRAINUAL_PASSWORD as string)?.length;
   const hasGeminiKey = !!(process.env.GEMINI_API_KEY as string)?.length;
-  // Claude key is obfuscated via parts — just check if env var is set
-  const hasClaudeKey = !!(process.env.CLAUDE_KEY_PARTS as unknown as string[])?.length;
+  const hasClaudeKey = !!(process.env.CLAUDE_API_KEY as string)?.length;
 
   const checkProxy = async () => {
     setProxyStatus('checking');
